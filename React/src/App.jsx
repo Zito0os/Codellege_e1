@@ -9,6 +9,7 @@ const products = [
   {
     title: 'Reddragon',
     color: 'Rojo',
+    price: 899.00,
     description: 'Teclado mecánico económico con excelente iluminación, perfecto para empezar en gaming.',
     image: REDRAGON,
     id: 1,
@@ -16,6 +17,7 @@ const products = [
   {
     title: 'Corsair',
     color: 'Negro/Gris',
+    price: 2499.00,
     description: 'Teclado premium para jugadores exigentes con acabados y desempeño superiores.',
     image: cor,
     id: 2,
@@ -23,6 +25,7 @@ const products = [
   {
     title: 'Razer',
     color: 'Verde/Negro',
+    price: 1899.00,
     description: 'Con switches ultrarrápidos y tecnología RGB para una experiencia competitiva.',
     image: RAZER,
     id: 3,
@@ -30,6 +33,7 @@ const products = [
   {
     title: 'Logitech',
     color: 'Blanco/Negro',
+    price: 1599.00,
     description: 'Diseño elegante y funcional, ideal para trabajo diario con buen rendimiento.',
     image: LOGITECH,
     id: 4,
@@ -44,7 +48,7 @@ export default function App() {
   }
 
   return (
-    <main className="catalog-page">s
+    <main className="catalog-page">
       <section className="catalog-hero">
         <div>
           <p className="hero-kicker">Encuentra tu setup ideal</p>
@@ -64,6 +68,7 @@ export default function App() {
               <span className="product-tag">{product.color}</span>
               <h2>{product.title}</h2>
               <p>{product.description}</p>
+              <h2>${product.price}</h2>
             </div>
 
             <button

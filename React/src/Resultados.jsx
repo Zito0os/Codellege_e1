@@ -26,6 +26,7 @@ export default function Resultados({ product, onBack }) {
           <div className="result-details">
             <span className="eyebrow">Teclado recomendado</span>
             <h1>{product.title}</h1>
+            <h1>${product.price}</h1>
 
             <div className="meta-row">
               <span className="meta-pill">Color: {product.color}</span>
