@@ -44,7 +44,7 @@ export default function App() {
   }
 
   return (
-    <main className="catalog-page">
+    <main className="catalog-page">s
       <section className="catalog-hero">
         <div>
           <p className="hero-kicker">Encuentra tu setup ideal</p>
