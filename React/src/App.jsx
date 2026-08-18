@@ -1,12 +1,7 @@
 import { useState } from 'react';
 
 const products = [
-<<<<<<< Updated upstream
-  { title: 'Reddragon', color: 'Rojo', price: 899.00, description: 'Teclado mecánico económico con excelente iluminación.', id: 1 },
-  { title: 'Corsair', color: 'Negro/Gris', price: 2499.00, description: 'Teclado de gama alta para entusiastas del gaming.', id: 2 },
-  { title: 'Razer', color: 'Verde/Negro', price: 1899.00, description: 'Con switches ultra rápidos y tecnología Chroma RGB.', id: 3 },
-  { title: 'Logitech', color: 'Blanco/Negro', price: 1599.00, description: 'Diseño minimalista y conectividad inalámbrica de baja latencia.', id: 4 },
-=======
+
   {
     title: 'Reddragon',
     color: 'Rojo',
@@ -39,7 +34,7 @@ const products = [
     image: LOGITECH,
     id: 4,
   },
->>>>>>> Stashed changes
+
 ];
 
 export default function ShoppingList() {
