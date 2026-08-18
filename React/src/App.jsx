@@ -1,7 +1,11 @@
 import { useState } from 'react';
+import cor from './assets/cor.jpg';
+import RAZER from './assets/RAZER.jpg';
+import REDRAGON from './assets/REDRAGON.jpg';
+import LOGITECH from './assets/LOGITECH.jpg';
+import Resultados from './Resultados';
 
 const products = [
-
   {
     title: 'Reddragon',
     color: 'Rojo',
@@ -27,57 +31,57 @@ const products = [
     id: 3,
   },
   {
-    title: 'Logitechhhhh',
-    color: 'Blanco/Negros',
+    title: 'Logitech',
+    color: 'Blanco/Negro',
     price: 1599.00,
     description: 'Diseño elegante y funcional, ideal para trabajo diario con buen rendimiento.',
     image: LOGITECH,
     id: 4,
   },
-
 ];
 
-export default function ShoppingList() {
-  // Estado para guardar el producto seleccionado actualmente (null si estamos en la lista)
+export default function App() {
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // Si hay un producto seleccionado, mostramos su pantalla de detalle
   if (selectedProduct) {
-    return (
-      <div style={{ padding: '20px' }}>
-        <h2>Información del Producto</h2>
-        <h3>{selectedProduct.title}</h3>
-        <p><strong>Color base:</strong> {selectedProduct.color}</p>
-        <p><strong>Descripción:</strong> {selectedProduct.description}</p>
-        <p><strong>Precio:</strong> ${selectedProduct.price} MXN</p>
-
-        {/* Botón para regresar a la lista */}
-        <button onClick={() => setSelectedProduct(null)} style={{ marginTop: '10px', padding: '8px 16px' }}>
-          Volver a la lista
-        </button>
-      </div>
-    );
+    return <Resultados product={selectedProduct} onBack={() => setSelectedProduct(null)} />;
   }
 
-  // Si no hay producto seleccionado, mostramos la lista de botones
- const listItems = products.map(product => (
-    <li key={product.id} style={{ marginBottom: '10px' }}>
-      <button 
-        onClick={() => setSelectedProduct(product)}
-        style={{ padding: '8px 16px', cursor: 'pointer', width: '220px', textAlign: 'left' }}
-      >
-        {/* 3. Mostramos título y precio en el botón */}
-        <strong>{product.title}</strong> - ${product.price}
-      </button>
-    </li>
-  ));
-
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>Selecciona un Teclado</h2>
-      <ul style={{ listStyleType: 'none', padding: 0 }}>
-        {listItems}
-      </ul>
-    </div>
+    <main className="catalog-page">
+      <section className="catalog-hero">
+        <div>
+          <p className="hero-kicker">Encuentra tu setup ideal</p>
+          <h1>Teclados gaming para cada estilo</h1>
+        </div>
+
+      </section>
+
+      <section className="catalog-grid" aria-label="Lista de teclados">
+        {products.map((product) => (
+          <article className="product-card" key={product.id}>
+            <div className="product-image-wrap">
+              <img src={product.image} alt={product.title} className="product-image" />
+            </div>
+
+            <div className="product-info">
+              <span className="product-tag">{product.color}</span>
+              <h2>{product.title}</h2>
+              <p>{product.description}</p>
+              <h2>${product.price}</h2>
+            </div>
+
+            <button
+              type="button"
+              className="product-button"
+              onClick={() => setSelectedProduct(product)}
+            >
+              Ver producto
+            </button>
+          </article>
+        ))}
+      </section>
+    </main>
   );
 }
+
