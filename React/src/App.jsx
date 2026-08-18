@@ -1,10 +1,16 @@
 import { useState } from 'react';
+import './Catalogo.css'
+import './index.css'
+import razer from './assets/razer.jpg'
+import corsair from './assets/corsair.jpg'
+import redragon from './assets/redragon.jpg'
+import logitech from './assets/logitech.jpg'
 
 const products = [
-  { title: 'Reddragon', color: 'Rojo', description: 'Teclado mecánico económico con excelente iluminación.', id: 1 },
-  { title: 'Corsair', color: 'Negro/Gris', description: 'Teclado de gama alta para entusiastas del gaming.', id: 2 },
-  { title: 'Razer', color: 'Verde/Negro', description: 'Con switches ultra rápidos y tecnología Chroma RGB.', id: 3 },
-  { title: 'Logitech', color: 'Blanco/Negro', description: 'Diseño minimalista y conectividad inalámbrica de baja latencia.', id: 4 },
+  { title: 'Redragon', color: 'Rojo', description: 'Teclado mecánico económico con excelente iluminación.', id: 1, imagen: redragon },
+  { title: 'Corsair', color: 'Negro/Gris', description: 'Teclado de gama alta para entusiastas del gaming.', id: 2, imagen: corsair },
+  { title: 'Razer', color: 'Verde/Negro', description: 'Con switches ultra rápidos y tecnología Chroma RGB.', id: 3, imagen: razer },
+  { title: 'Logitech', color: 'Blanco/Negro', description: 'Diseño minimalista y conectividad inalámbrica de baja latencia.', id: 4, imagen: logitech },
 ];
 
 export default function ShoppingList() {
@@ -29,13 +35,15 @@ export default function ShoppingList() {
   }
 
   // Si no hay producto seleccionado, mostramos la lista de botones
-  const listItems = products.map(product => (
-    <li key={product.id} style={{ marginBottom: '10px' }}>
+  const listItems = products.map(products => (
+    <li key={products.id}>
       <button 
-        onClick={() => setSelectedProduct(product)}
-        style={{ padding: '8px 16px', cursor: 'pointer', width: '150px' }}
+      
+      style={{ padding: '8px 16px', cursor: 'pointer', width: '200px' }}
+        onClick={() => setSelectedProduct(products)}
+      
       >
-        {product.title}
+        {products.title}
       </button>
     </li>
   ));
@@ -43,9 +51,20 @@ export default function ShoppingList() {
   return (
     <div style={{ padding: '20px' }}>
       <h2>Selecciona un Teclado</h2>
-      <ul style={{ listStyleType: 'none', padding: 0 }}>
-        {listItems}
-      </ul>
+       <div className="grid-products">
+        {products.map((prod) => (
+          <button 
+            key={prod.id} 
+            className="btn-products"
+            onClick={() => handleSelect(prod.titulo)}
+          >
+            <div className="imagen-wrapper">
+              <img src={prod.imagen} alt={prod.titulo} />
+            </div>
+            <span className="titulo-products">{prod.titulo}</span>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

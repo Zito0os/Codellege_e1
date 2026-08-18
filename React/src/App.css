@@ -95,6 +95,10 @@
   }
 }
 
+#button {
+  width: 400px;
+}
+
 #docs {
   border-right: 1px solid var(--border);
 
@@ -130,6 +134,7 @@
     &:hover {
       box-shadow: var(--shadow);
     }
+    
     .button-icon {
       height: 18px;
       width: 18px;
