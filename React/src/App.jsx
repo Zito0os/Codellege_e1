@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Navigate, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import cor from './assets/cor.jpg';
 import RAZER from './assets/RAZER.jpg';
 import REDRAGON from './assets/REDRAGON.jpg';
@@ -100,8 +101,8 @@ const advertisements = [
   },
 ];
 
-export default function App() {
-  const [selectedProduct, setSelectedProduct] = useState(null);
+function Catalog() {
+  const navigate = useNavigate();
   const [activeAd, setActiveAd] = useState(0);
 
   useEffect(() => {
@@ -118,10 +119,6 @@ export default function App() {
 
   const nextAd = () => showAd(activeAd + 1);
   const previousAd = () => showAd(activeAd - 1);
-
-  if (selectedProduct) {
-    return <Resultados product={selectedProduct} onBack={() => setSelectedProduct(null)} />;
-  }
 
   return (
     <main className="catalog-page">
@@ -195,7 +192,7 @@ export default function App() {
             <button
               type="button"
               className="product-button"
-              onClick={() => setSelectedProduct(product)}
+              onClick={() => navigate(`/producto/${product.id}`)}
             >
               Ver producto
             </button>
@@ -203,6 +200,28 @@ export default function App() {
         ))}
       </section>
     </main>
+  );
+}
+
+function ProductPage() {
+  const navigate = useNavigate();
+  const { productId } = useParams();
+  const product = products.find((item) => item.id === Number(productId));
+
+  if (!product) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <Resultados product={product} onBack={() => navigate('/')} />;
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Catalog />} />
+      <Route path="/producto/:productId" element={<ProductPage />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
 
