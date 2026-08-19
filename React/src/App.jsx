@@ -82,7 +82,7 @@ const advertisements = [
   {
     image: RAZER,
     alt: 'Promoción de teclados Razer',
-    title: 'Potencia tu partida',
+    title: 'Modelos 2025 en descuento',
     text: 'Descubre teclados diseñados para competir.',
   },
   {
@@ -126,7 +126,7 @@ function Catalog() {
         <div className="logo">Peri-Soft</div>
         <nav>
           <ul className="nav-links">
-            <li><a href="#hero">Hero</a></li>
+            <li><a href="#hero">Novedades</a></li>
             <li><a href="#catalogo">Catalogo</a></li>
             <li><a href="#contacto">Contacto</a></li>
           </ul>
@@ -142,7 +142,7 @@ function Catalog() {
             className="carousel-image"
           />
           <div className="carousel-content">
-            <span className="carousel-label">Publicidad</span>
+            <span className="carousel-label">Ofertas</span>
             <h2>{advertisements[activeAd].title}</h2>
             <p>{advertisements[activeAd].text}</p>
           </div>

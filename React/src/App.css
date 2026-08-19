@@ -41,7 +41,7 @@ html {
   padding: 1rem 2rem;
 
  
-  background-color: rgba(15, 23, 42, 0.75); 
+  background-color: rgba(42, 60, 102, 0.75); 
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -49,7 +49,7 @@ html {
 
 .logo {
   color: #ffffff;
-  font-size: 1.25rem;
+  font-size: 2.25rem;
   font-weight: 700;
 }
 
@@ -61,7 +61,7 @@ html {
 }
 
 .nav-links a {
-  color: #94a3b8; 
+  color: #dce6f3; 
   text-decoration: none; 
   font-size: 0.95rem;
   font-weight: 500;
@@ -85,6 +85,7 @@ section {
 #hero {
   padding: 0; 
   min-height: auto; 
+  margin-top: 3%;
 }
 #contacto {
   padding:0;
@@ -93,10 +94,11 @@ section {
 #inicio { background-color: #0f172a; color: #fff; }
 #servicios { background-color: #1e293b; color: #fff; }
 #contacto { background-color: #334155; color: #fff; }
-
+  
 
 .hero {
   position: relative;
+  
   .base,
   .framework,
   .vite {
