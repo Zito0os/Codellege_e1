@@ -78,16 +78,18 @@ html {
 section {
   min-height: 100vh;
   padding: 6rem 2rem 2rem 2rem; 
-  
-
   scroll-margin-top: 60px; 
+  
   
 }
 #hero {
   padding: 0; 
   min-height: auto; 
 }
-
+#contacto {
+  padding:0;
+  min-height: auto;
+}
 #inicio { background-color: #0f172a; color: #fff; }
 #servicios { background-color: #1e293b; color: #fff; }
 #contacto { background-color: #334155; color: #fff; }
@@ -256,4 +258,37 @@ section {
     right: 0;
     border-right-color: var(--border);
   }
+
+  
+}
+
+.footer {
+  background-color: #0e0a46;
+  color: #ffffff;
+  padding: 20px 0;
+  margin-top: 40px;
+  width: 100%;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between; /* Distribuye el contenido: uno a la izquierda y otro a la derecha */
+  align-items: center;          /* Alinea verticalmente los textos al centro */
+  padding: 0 20px;     
+  background-color: #0f172a;         /* Un pequeño margen para que no toque los bordes de la pantalla */
+}
+
+.footer-links {
+  display: flex;
+  gap: 15px;                    /* Separa los enlaces entre sí */
+}
+
+/* Arregla el color morado de los enlaces */
+.footer-links a {
+  color: #ffffff;               /* Texto blanco visible sobre fondo oscuro */
+  text-decoration: none;        /* Quita el subrayado predeterminado */
+}
+
+.footer-links a:hover {
+  color: #646cff;               /* Cambia de color suavemente al pasar el mouse */
 }

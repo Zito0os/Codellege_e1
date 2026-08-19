@@ -9,7 +9,7 @@ import Resultados from './Resultados';
 import log from './assets/log.jpg';
 import ter from './assets/ter.jpg';
 import arco from './assets/arco.jpg';
-import './App.css'
+import './App.css';
 
 const products = [
   {
@@ -203,6 +203,18 @@ function Catalog() {
           </article>
         ))}
       </section>
+      <hr></hr>
+      
+        <footer id="contacto" className="footer">
+          <section id="contacto">
+        <div className="footer-content">
+          <p>&copy; 2026 Peri-Soft. Todos los derechos reservados.</p>
+          <p> Dirección: Constitución 3098-Piso 1 </p>
+          <p> Teléfono: 8115724815</p>
+        </div>
+        </section>
+      </footer>
+      
     </main>
   );
 }
