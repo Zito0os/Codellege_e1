@@ -3,6 +3,7 @@ import cor from './assets/cor.jpg';
 import RAZER from './assets/RAZER.jpg';
 import REDRAGON from './assets/REDRAGON.jpg';
 import LOGITECH from './assets/LOGITECH.jpg';
+import EPOMAKER from './assets/LOGITECH.jpg';
 import Resultados from './Resultados';
 
 const products = [
