@@ -1,121 +1,131 @@
 import { useState } from 'react';
 import cor from './assets/cor.jpg';
 import RAZER from './assets/RAZER.jpg';
-import REDRAGON  from './assets/REDRAGON.jpg';
+import REDRAGON from './assets/REDRAGON.jpg';
 import LOGITECH from './assets/LOGITECH.jpg';
+import log from './assets/log.jpg';
+import EPOMAKER from './assets/EPOMAKER.jpg';
+import ter from './assets/ter.jpg';
+import arco from './assets/arco.jpg';
+
+
+
+
+import Resultados from './Resultados';
+
+
 
 const products = [
-  { 
-    title: 'Reddragon', 
-    color: 'Rojo', 
-    description: 'Teclado mecánico económico con excelente iluminación.', 
-    image: REDRAGON, 
-    id: 1 
+  {
+    title: 'Reddragon',
+    color: 'Rojo',
+    price: 899.00,
+    description: 'Teclado mecánico económico con excelente iluminación, perfecto para empezar en gaming.',
+    image: REDRAGON,
+    id: 1,
   },
-  { 
-    title: 'Corsair', 
-    color: 'Negro/Gris', 
-    description: 'Teclado de gama alta para entusiastas del gaming.', 
-    image: cor, 
-    id: 2 
+  {
+    title: 'Corsair',
+    color: 'Negro/Gris',
+    price: 2499.00,
+    description: 'Teclado premium para jugadores exigentes con acabados y desempeño superiores.',
+    image: cor,
+    id: 2,
   },
-  { 
-    title: 'Razer', 
-    color: 'Verde/Negro', 
-    description: 'Con switches ultra rápidos y tecnología Chroma RGB.', 
-    image: RAZER, 
-    id: 3 
+  {
+    title: 'Razer',
+    color: 'Verde/Negro',
+    price: 1899.00,
+    description: 'Con switches ultrarrápidos y tecnología RGB para una experiencia competitiva.',
+    image: RAZER,
+    id: 3,
   },
-  { 
-    title: 'Logitech', 
-    color: 'Blanco/Negro', 
-    description: 'Diseño minimalista y conectividad inalámbrica de baja latencia.', 
-    image: LOGITECH, 
-    id: 4 
+  {
+    title: 'Logitech',
+    color: 'Blanco/Negro',
+    price: 1599.00,
+    description: 'Diseño elegante y funcional, ideal para trabajo diario con buen rendimiento.',
+    image: LOGITECH,
+    id: 4,
+  },
+
+
+  {
+    title: 'Epomaker',
+    color: 'Verde/Negro',
+    price: 1600.00,
+    description: 'Wireless gaming keyboard with RGB lighting.',
+    image: EPOMAKER,
+    id: 5,
+  },
+  {
+    title: 'Razer',
+    color: 'Blanco/Negro',
+    price: 1400.00,
+    description: 'Teclado arcoiris negro.',
+    image: arco,
+    id: 6,
+  },
+  {
+    title: 'Terport',
+    color: 'Negro',
+    price: 1799.00,
+    description: '4 efectos de iluminacion.',
+    image: ter,
+    id: 7,
+  },
+  {
+    title: 'Logitech',
+    color: 'Rosa',
+    price: 1399.00,
+    description: 'Teclado compacto bluetooth para windows.',
+    image: log,
+    id: 8,
   },
 ];
 
-export default function App()  
-{
+export default function App() {
   const [selectedProduct, setSelectedProduct] = useState(null);
-  // Si hay un producto seleccionado, mostramos su pantalla de detalle centrada
+
   if (selectedProduct) {
-    return (
-      <div style={{ 
-        padding: '20px', 
-        display: 'flex', 
-        flexDirection: 'column', 
-        alignItems: 'center', 
-        textAlign: 'center',
-        maxWidth: '600px',
-        margin: '0 auto'
-      }}>
-        <h2>Información del Producto</h2>
-        
-        {/* Contenedor de imagen centrado */}
-        <div style={{ marginBottom: '15px', display: 'flex', justifyContent: 'center', width: '100%' }}>
-          <img 
-            src={selectedProduct.image} 
-            alt={selectedProduct.title} 
-            style={{ width: '300px', height: 'auto', display: 'block' }} 
-          />
+    return <Resultados product={selectedProduct} onBack={() => setSelectedProduct(null)} />;
+  }
+
+  return (
+    <main className="catalog-page">
+      <section className="catalog-hero">
+        <div>
+          <p className="hero-kicker">Encuentra tu setup ideal</p>
+          <h1>Teclados gaming para cada estilo</h1>
         </div>
 
-        <h3>{selectedProduct.title}</h3>
-        <p><strong>Color base:</strong> {selectedProduct.color}</p>
-        <p><strong>Descripción:</strong> {selectedProduct.description}</p>
-        
-        {/* Botón para regresar a la lista */}
-        <button onClick={() => setSelectedProduct(null)} style={{ marginTop: '10px', padding: '8px 16px', cursor: 'pointer' }}>
-          Volver a la lista
-        </button>
-      </div>
-    );
-  }
-   const listItems = products.map(product => (
-    <li key={product.id} style={{ 
-      border: '1px solid #ccc', 
-      padding: '15px', 
-      display: 'flex', 
-      flexDirection: 'column', 
-      alignItems: 'center', 
-      gap: '10px',
-      backgroundColor: '#f9f9f9'
-    }}>
-      {/* La imagen ahora se posiciona arriba */}
-      <img 
-        src={product.image} 
-        alt={product.title} 
-        style={{ width: '100%', height: '120px', objectFit: 'cover' }} 
-      />
-      <button 
-        onClick={() => setSelectedProduct(product)}
-        style={{ padding: '8px 16px', cursor: 'pointer', width: '100%' }}
-      >
-        {product.title}
-      </button>
-    </li>
-  ));
-  return (
-    <div style={{ 
-      maxWidth: '1000px', 
-      margin: '0 auto', 
-      padding: '20px', 
-      textAlign: 'center' 
-    }}>
-      <h2>Selecciona un Teclado</h2>
-      
-      {/* Contenedor en cuadrícula dividido en 4 columnas estables */}
-      <ul style={{ 
-        listStyleType: 'none', 
-        padding: 0, 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(4, 1fr)', 
-        gap: '20px' 
-      }}>
-        {listItems}
-      </ul>
-    </div>
+      </section>
+
+      <section className="catalog-grid" aria-label="Lista de teclados">
+        {products.map((product) => (
+          <article className="product-card" key={product.id}>
+            <div className="product-image-wrap">
+              <img src={product.image} alt={product.title} className="product-image" />
+            </div>
+
+            <div className="product-info">
+              <span className="product-tag">{product.color}</span>
+              <h2>{product.title}</h2>
+              <p>{product.description}</p>
+              <h2>${product.price}</h2>
+            </div>
+
+            <button
+              type="button"
+              className="product-button"
+              onClick={() => setSelectedProduct(product)}
+            >
+              Ver producto
+            </button>
+          </article>
+        ))}
+      </section>
+    </main>
   );
 }
 
