@@ -17,9 +17,84 @@
   }
 }
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+.header-glass {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%; 
+  z-index: 1000;
+  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+
+ 
+  background-color: rgba(15, 23, 42, 0.75); 
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo {
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem; 
+  list-style: none;
+}
+
+.nav-links a {
+  color: #94a3b8; 
+  text-decoration: none; 
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
+}
+
+.nav-links a:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+section {
+  min-height: 100vh;
+  padding: 6rem 2rem 2rem 2rem; 
+  
+
+  scroll-margin-top: 60px; 
+  
+}
+#hero {
+  padding: 0; 
+  min-height: auto; 
+}
+
+#inicio { background-color: #0f172a; color: #fff; }
+#servicios { background-color: #1e293b; color: #fff; }
+#contacto { background-color: #334155; color: #fff; }
+
+
 .hero {
   position: relative;
-
   .base,
   .framework,
   .vite {

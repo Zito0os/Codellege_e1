@@ -6,12 +6,10 @@ import REDRAGON from './assets/REDRAGON.jpg';
 import LOGITECH from './assets/LOGITECH.jpg';
 import EPOMAKER from './assets/LOGITECH.jpg';
 import Resultados from './Resultados';
-
 import log from './assets/log.jpg';
-
 import ter from './assets/ter.jpg';
 import arco from './assets/arco.jpg';
-
+import './App.css'
 
 const products = [
   {
@@ -121,17 +119,22 @@ function Catalog() {
   const previousAd = () => showAd(activeAd - 1);
 
   return (
+    
     <main className="catalog-page">
-      <section className="catalog-hero">
-        <div>
-          <h1>Peri-Soft</h1>
-          <p className="hero-kicker">Teclados gaming para cada estilo</p>
-          
-        </div>
+      
+      <header className="header-glass">
+        <div className="logo">Peri-Soft</div>
+        <nav>
+          <ul className="nav-links">
+            <li><a href="#hero">Hero</a></li>
+            <li><a href="#catalogo">Catalogo</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+          </ul>
+        </nav>
+      </header>
 
-      </section>
-
-      <section className="advertisement-carousel" aria-label="Publicidad destacada">
+      <br/><br/>
+      <section id="hero" className="advertisement-carousel" aria-label="Publicidad destacada">
         <div className="carousel-slide">
           <img
             src={advertisements[activeAd].image}
@@ -176,7 +179,7 @@ function Catalog() {
         </div>
       </section>
 
-      <section className="catalog-grid" aria-label="Lista de teclados">
+      <section id="catalogo" className="catalog-grid" aria-label="Lista de teclados">
         {products.map((product) => (
           <article className="product-card" key={product.id}>
             <div className="product-image-wrap">
