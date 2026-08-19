@@ -89,6 +89,124 @@ button {
   letter-spacing: -0.06em;
 }
 
+.advertisement-carousel {
+  position: relative;
+  min-height: 260px;
+  margin-bottom: 28px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background: #172554;
+  box-shadow: var(--shadow);
+}
+
+.carousel-slide {
+  position: relative;
+  display: flex;
+  min-height: 260px;
+  align-items: center;
+  overflow: hidden;
+}
+
+.carousel-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.38;
+}
+
+.carousel-slide::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  background: linear-gradient(90deg, rgba(2, 8, 23, 0.96), rgba(2, 8, 23, 0.3));
+}
+
+.carousel-content {
+  position: relative;
+  z-index: 1;
+  max-width: 520px;
+  padding: 32px 82px;
+}
+
+.carousel-label {
+  color: #fde68a;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.carousel-content h2 {
+  margin: 8px 0;
+  color: white;
+  font-size: clamp(1.7rem, 4vw, 2.8rem);
+  line-height: 1.1;
+}
+
+.carousel-content p {
+  margin: 0;
+  color: var(--text);
+}
+
+.carousel-control {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  background: rgba(2, 8, 23, 0.65);
+  color: white;
+  cursor: pointer;
+  font-size: 1.4rem;
+  line-height: 1;
+  transform: translateY(-50%);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.carousel-control:hover {
+  background: rgba(124, 58, 237, 0.85);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.carousel-control-previous {
+  left: 20px;
+}
+
+.carousel-control-next {
+  right: 20px;
+}
+
+.carousel-dots {
+  position: absolute;
+  z-index: 2;
+  bottom: 18px;
+  left: 50%;
+  display: flex;
+  gap: 8px;
+  transform: translateX(-50%);
+}
+
+.carousel-dot {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+}
+
+.carousel-dot.is-active {
+  width: 24px;
+  border-radius: 999px;
+  background: #fde68a;
+}
+
 .hero-button,
 .product-button,
 .primary-action,
@@ -329,6 +447,18 @@ button {
     flex-direction: column;
     align-items: flex-start;
     padding: 20px 18px;
+  }
+
+  .carousel-content {
+    padding: 28px 58px;
+  }
+
+  .carousel-control-previous {
+    left: 12px;
+  }
+
+  .carousel-control-next {
+    right: 12px;
   }
 
   .catalog-grid {

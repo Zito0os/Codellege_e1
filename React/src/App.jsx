@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import cor from './assets/cor.jpg';
 import RAZER from './assets/RAZER.jpg';
 import REDRAGON from './assets/REDRAGON.jpg';
@@ -40,8 +40,45 @@ const products = [
   },
 ];
 
+const advertisements = [
+  {
+    image: RAZER,
+    alt: 'Promoción de teclados Razer',
+    title: 'Potencia tu partida',
+    text: 'Descubre teclados diseñados para competir.',
+  },
+  {
+    image: LOGITECH,
+    alt: 'Promoción de teclados Logitech',
+    title: 'Tu setup, tu estilo',
+    text: 'Encuentra el teclado ideal para tu espacio.',
+  },
+  {
+    image: EPOMAKER,
+    alt: 'Promoción de teclados Epomaker',
+    title: 'Ilumina cada jugada',
+    text: 'RGB y rendimiento para llevar tu experiencia al siguiente nivel.',
+  },
+];
+
 export default function App() {
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [activeAd, setActiveAd] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveAd((currentAd) => (currentAd + 1) % advertisements.length);
+    }, 5000);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const showAd = (index) => {
+    setActiveAd((index + advertisements.length) % advertisements.length);
+  };
+
+  const nextAd = () => showAd(activeAd + 1);
+  const previousAd = () => showAd(activeAd - 1);
 
   if (selectedProduct) {
     return <Resultados product={selectedProduct} onBack={() => setSelectedProduct(null)} />;
@@ -55,6 +92,51 @@ export default function App() {
           <h1>Teclados gaming para cada estilo</h1>
         </div>
 
+      </section>
+
+      <section className="advertisement-carousel" aria-label="Publicidad destacada">
+        <div className="carousel-slide">
+          <img
+            src={advertisements[activeAd].image}
+            alt={advertisements[activeAd].alt}
+            className="carousel-image"
+          />
+          <div className="carousel-content">
+            <span className="carousel-label">Publicidad</span>
+            <h2>{advertisements[activeAd].title}</h2>
+            <p>{advertisements[activeAd].text}</p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          className="carousel-control carousel-control-previous"
+          onClick={previousAd}
+          aria-label="Publicidad anterior"
+        >
+          &#10094;
+        </button>
+        <button
+          type="button"
+          className="carousel-control carousel-control-next"
+          onClick={nextAd}
+          aria-label="Siguiente publicidad"
+        >
+          &#10095;
+        </button>
+
+        <div className="carousel-dots" aria-label="Seleccionar publicidad">
+          {advertisements.map((advertisement, index) => (
+            <button
+              type="button"
+              className={`carousel-dot ${index === activeAd ? 'is-active' : ''}`}
+              onClick={() => showAd(index)}
+              aria-label={`Mostrar publicidad ${index + 1}`}
+              aria-current={index === activeAd ? 'true' : undefined}
+              key={advertisement.title}
+            />
+          ))}
+        </div>
       </section>
 
       <section className="catalog-grid" aria-label="Lista de teclados">
