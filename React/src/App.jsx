@@ -6,10 +6,10 @@ import LOGITECH from './assets/LOGITECH.jpg';
 import EPOMAKER from './assets/LOGITECH.jpg';
 import Resultados from './Resultados';
 
-import log from './assets/razer.jpg';
+import log from './assets/log.jpg';
 
-import ter from './assets/RAZER.jpg';
-import arco from './assets/RAZER.jpg';
+import ter from './assets/ter.jpg';
+import arco from './assets/arco.jpg';
 
 
 const products = [
@@ -93,7 +93,7 @@ const advertisements = [
     text: 'Encuentra el teclado ideal para tu espacio.',
   },
   {
-    image: EPOMAKER,
+    image: log,
     alt: 'Promoción de teclados Epomaker',
     title: 'Ilumina cada jugada',
     text: 'RGB y rendimiento para llevar tu experiencia al siguiente nivel.',
