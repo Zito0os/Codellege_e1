@@ -178,6 +178,12 @@ function Catalog() {
           ))}
         </div>
       </section>
+            
+      <h2>Filtros</h2>
+      <button className="button"> Mas vendidos</button>
+      <button className="button"> Nuevos</button>
+      <button className="button"> Ofertas</button>
+
 
       <section id="catalogo" className="catalog-grid" aria-label="Lista de teclados">
         {products.map((product) => (
@@ -189,7 +195,7 @@ function Catalog() {
             <div className="product-info">
               <span className="product-tag">{product.color}</span>
               <h2>{product.title}</h2>
-              <p>{product.description}</p>
+              
               <h2>${product.price}</h2>
             </div>
 
