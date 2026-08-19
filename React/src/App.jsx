@@ -124,8 +124,9 @@ function Catalog() {
     <main className="catalog-page">
       <section className="catalog-hero">
         <div>
-          <p className="hero-kicker">Encuentra tu setup ideal</p>
-          <h1>Teclados gaming para cada estilo</h1>
+          <h1>Peri-Soft</h1>
+          <p className="hero-kicker">Teclados gaming para cada estilo</p>
+          
         </div>
 
       </section>
