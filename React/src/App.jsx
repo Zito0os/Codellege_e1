@@ -3,7 +3,17 @@ import cor from './assets/cor.jpg';
 import RAZER from './assets/RAZER.jpg';
 import REDRAGON from './assets/REDRAGON.jpg';
 import LOGITECH from './assets/LOGITECH.jpg';
+import log from './assets/log.jpg';
+import EPOMAKER from './assets/EPOMAKER.jpg';
+import ter from './assets/ter.jpg';
+import arco from './assets/arco.jpg';
+
+
+
+
 import Resultados from './Resultados';
+
+
 
 const products = [
   {
@@ -37,6 +47,40 @@ const products = [
     description: 'Diseño elegante y funcional, ideal para trabajo diario con buen rendimiento.',
     image: LOGITECH,
     id: 4,
+  },
+
+
+  {
+    title: 'Epomaker',
+    color: 'Verde/Negro',
+    price: 1600.00,
+    description: 'Wireless gaming keyboard with RGB lighting.',
+    image: EPOMAKER,
+    id: 5,
+  },
+  {
+    title: 'Razer',
+    color: 'Blanco/Negro',
+    price: 1400.00,
+    description: 'Teclado arcoiris negro.',
+    image: arco,
+    id: 6,
+  },
+  {
+    title: 'Terport',
+    color: 'Negro',
+    price: 1799.00,
+    description: '4 efectos de iluminacion.',
+    image: ter,
+    id: 7,
+  },
+  {
+    title: 'Logitech',
+    color: 'Rosa',
+    price: 1399.00,
+    description: 'Teclado compacto bluetooth para windows.',
+    image: log,
+    id: 8,
   },
 ];
 
