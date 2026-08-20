@@ -15,6 +15,8 @@ const products = [
   {
     title: 'Reddragon',
     color: 'Rojo',
+    descuento: 10,
+    tipo_switch: 'Blue',
     price: 899.00,
     description: 'Teclado mecánico económico con excelente iluminación, perfecto para empezar en gaming.',
     image: REDRAGON,
@@ -23,6 +25,8 @@ const products = [
   {
     title: 'Corsair',
     color: 'Negro/Gris',
+    tipo_switch: 'Red',
+    descuento: 0,
     price: 2499.00,
     description: 'Teclado premium para jugadores exigentes con acabados y desempeño superiores.',
     image: cor,
@@ -31,6 +35,8 @@ const products = [
   {
     title: 'Razer',
     color: 'Verde/Negro',
+    tipo_switch: 'Brown',
+    descuento: 15,
     price: 1899.00,
     description: 'Con switches ultrarrápidos y tecnología RGB para una experiencia competitiva.',
     image: RAZER,
@@ -39,6 +45,8 @@ const products = [
   {
     title: 'Logitech',
     color: 'Blanco/Negro',
+    tipo_switch: 'Brown',
+    descuento: 0,
     price: 1599.00,
     description: 'Diseño elegante y funcional, ideal para trabajo diario con buen rendimiento.',
     image: LOGITECH,
@@ -47,6 +55,8 @@ const products = [
   {
     title: 'Epomaker',
     color: 'Verde/Negro',
+    tipo_switch: 'Blue',
+    descuento: 0,
     price: 1600.00,
     description: 'Wireless gaming keyboard with RGB lighting.',
     image: EPOMAKER,
@@ -55,6 +65,8 @@ const products = [
   {
     title: 'Razer',
     color: 'Blanco/Negro',
+    tipo_switch: 'Red',
+    descuento: 0,
     price: 1400.00,
     description: 'Teclado arcoiris negro.',
     image: arco,
@@ -63,6 +75,8 @@ const products = [
   {
     title: 'Terport',
     color: 'Negro',
+    tipo_switch: 'Brown',
+    descuento: 0,
     price: 1799.00,
     description: '4 efectos de iluminacion.',
     image: ter,
@@ -71,6 +85,8 @@ const products = [
   {
     title: 'Logitech',
     color: 'Rosa',
+    tipo_switch: 'Blue',
+    descuento: 50,
     price: 1399.00,
     description: 'Teclado compacto bluetooth para windows.',
     image: log,
@@ -102,6 +118,9 @@ const advertisements = [
 function Catalog() {
   const navigate = useNavigate();
   const [activeAd, setActiveAd] = useState(0);
+  const [switchFilter, setSwitchFilter] = useState('Todos');
+  const [priceOrder, setPriceOrder] = useState(null);
+  const [offersOnly, setOffersOnly] = useState(false);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -118,6 +137,31 @@ function Catalog() {
   const nextAd = () => showAd(activeAd + 1);
   const previousAd = () => showAd(activeAd - 1);
 
+  const filteredProducts = products
+    .filter((product) => switchFilter === 'Todos' || product.tipo_switch === switchFilter)
+    .filter((product) => !offersOnly || product.descuento > 0)
+    .sort((firstProduct, secondProduct) => {
+      if (priceOrder === 'high-to-low') {
+        return secondProduct.price - firstProduct.price;
+      }
+
+      if (priceOrder === 'low-to-high') {
+        return firstProduct.price - secondProduct.price;
+      }
+
+      return 0;
+    });
+
+  const togglePriceOrder = () => {
+    setPriceOrder((currentOrder) => {
+      if (currentOrder === null || currentOrder === 'low-to-high') {
+        return 'high-to-low';
+      }
+
+      return 'low-to-high';
+    });
+  };
+
   return (
     
     <main className="catalog-page">
@@ -133,7 +177,6 @@ function Catalog() {
         </nav>
       </header>
 
-      <br/><br/>
       <section id="hero" className="advertisement-carousel" aria-label="Publicidad destacada">
         <div className="carousel-slide">
           <img
@@ -179,14 +222,46 @@ function Catalog() {
         </div>
       </section>
             
-      <h2>Filtros</h2>
-      <button className="button"> Mas vendidos</button>
-      <button className="button"> Nuevos</button>
-      <button className="button"> Ofertas</button>
+      <div className="filter-bar" aria-label="Filtros de productos">
+        <h2>Filtros</h2>
+
+        <label className="filter-select-label">
+          Tipo de switch
+          <select
+            value={switchFilter}
+            onChange={(event) => setSwitchFilter(event.target.value)}
+          >
+            <option value="Todos">Todos</option>
+            <option value="Blue">Blue</option>
+            <option value="Red">Red</option>
+            <option value="Brown">Brown</option>
+          </select>
+        </label>
+
+        <button
+          type="button"
+          className={`filter-button ${priceOrder ? 'is-active' : ''}`}
+          onClick={togglePriceOrder}
+          aria-label={priceOrder === 'high-to-low'
+            ? 'Ordenar precio de mayor a menor'
+            : 'Ordenar precio de menor a mayor'}
+        >
+          Precio {priceOrder === 'high-to-low' ? '↑' : '↓'}
+        </button>
+
+        <button
+          type="button"
+          className={`filter-button ${offersOnly ? 'is-active' : ''}`}
+          onClick={() => setOffersOnly((currentValue) => !currentValue)}
+          aria-pressed={offersOnly}
+        >
+          Ofertas
+        </button>
+      </div>
 
 
       <section id="catalogo" className="catalog-grid" aria-label="Lista de teclados">
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <article className="product-card" key={product.id}>
             <div className="product-image-wrap">
               <img src={product.image} alt={product.title} className="product-image" />
@@ -208,6 +283,9 @@ function Catalog() {
             </button>
           </article>
         ))}
+        {filteredProducts.length === 0 && (
+          <p className="empty-results">No hay productos con esos filtros.</p>
+        )}
       </section>
       <hr></hr>
       
