@@ -398,6 +398,9 @@ button {
   background: rgba(15, 23, 42, 0.74);
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
+  
+  margin-top: 1%;
+  margin-bottom: 1%;
 }
 
 .back-button {
@@ -405,10 +408,11 @@ button {
   background: rgba(148, 163, 184, 0.08);
   color: white;
   border: 1px solid var(--border);
-  margin-bottom: 24px;
+  margin-bottom: 1%;
 }
 
 .result-layout {
+  
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   gap: 32px;
@@ -416,8 +420,10 @@ button {
 }
 
 .result-visual {
+  
   display: flex;
-  justify-content: center;
+  
+  
 }
 
 .image-frame {
@@ -437,7 +443,7 @@ button {
 
 .eyebrow {
   display: inline-block;
-  margin-bottom: 10px;
+  margin-bottom: 1px;
   color: #c4b5fd;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -446,7 +452,7 @@ button {
 }
 
 .result-details h1 {
-  margin-bottom: 18px;
+  margin-bottom: 19px;
 }
 
 .meta-row {

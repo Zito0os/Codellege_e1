@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Navigate, Route, Routes, useNavigate, useParams } from 'react-router-dom';
+import {
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
 
 import cor from './assets/cor.jpg';
 import RAZER from './assets/RAZER.PNG';
@@ -19,7 +25,8 @@ const products = [
     descuento: 10,
     tipo_switch: 'Blue',
     price: 899.00,
-    description: 'Teclado mecánico económico con excelente iluminación, perfecto para empezar en gaming.',
+    description:
+      'Teclado mecánico económico con excelente iluminación, perfecto para empezar en gaming.',
     image: REDRAGON,
     id: 1,
   },
@@ -29,7 +36,8 @@ const products = [
     tipo_switch: 'Red',
     descuento: 0,
     price: 2499.00,
-    description: 'Teclado premium para jugadores exigentes con acabados y desempeño superiores.',
+    description:
+      'Teclado premium para jugadores exigentes con acabados y desempeño superiores.',
     image: cor,
     id: 2,
   },
@@ -39,7 +47,8 @@ const products = [
     tipo_switch: 'Brown',
     descuento: 15,
     price: 1899.00,
-    description: 'Con switches ultrarrápidos y tecnología RGB para una experiencia competitiva.',
+    description:
+      'Con switches ultrarrápidos y tecnología RGB para una experiencia competitiva.',
     image: RAZER,
     id: 3,
   },
@@ -49,7 +58,8 @@ const products = [
     tipo_switch: 'Brown',
     descuento: 0,
     price: 1599.00,
-    description: 'Diseño elegante y funcional, ideal para trabajo diario con buen rendimiento.',
+    description:
+      'Diseño elegante y funcional, ideal para trabajo diario con buen rendimiento.',
     image: LOGITECH,
     id: 4,
   },
@@ -59,7 +69,8 @@ const products = [
     tipo_switch: 'Blue',
     descuento: 0,
     price: 1600.00,
-    description: 'Wireless gaming keyboard with RGB lighting.',
+    description:
+      'Wireless gaming keyboard with RGB lighting.',
     image: EPOMAKER,
     id: 5,
   },
@@ -69,7 +80,8 @@ const products = [
     tipo_switch: 'Red',
     descuento: 0,
     price: 1400.00,
-    description: 'Teclado arcoiris negro.',
+    description:
+      'Teclado arcoiris negro.',
     image: arco,
     id: 6,
   },
@@ -79,7 +91,8 @@ const products = [
     tipo_switch: 'Brown',
     descuento: 0,
     price: 1799.00,
-    description: '4 efectos de iluminacion.',
+    description:
+      '4 efectos de iluminacion.',
     image: ter,
     id: 7,
   },
@@ -89,7 +102,8 @@ const products = [
     tipo_switch: 'Blue',
     descuento: 50,
     price: 1399.00,
-    description: 'Teclado compacto bluetooth para windows.',
+    description:
+      'Teclado compacto bluetooth para windows.',
     image: log,
     id: 8,
   },
@@ -110,23 +124,34 @@ const advertisements = [
   },
   {
     image: log,
-    alt: 'Promoción de teclados Epomaker',
+    alt: 'Promoción de teclados Logitech',
     title: 'Ilumina cada jugada',
-    text: 'RGB y rendimiento para llevar tu experiencia al siguiente nivel.',
+    text:
+      'RGB y rendimiento para llevar tu experiencia al siguiente nivel.',
   },
 ];
 
 /* =====================================================
-   HEADER CON MENÚ HAMBURGUESA
+   HEADER
    ===================================================== */
 
-function Header({ menuOpen, setMenuOpen, cart, favorites }) {
+function Header({
+  menuOpen,
+  setMenuOpen,
+  cart,
+  favorites,
+  removeFromCart,
+  updateCartQuantity,
+}) {
+  const [cartOpen, setCartOpen] = useState(false);
+
   const closeMenu = () => {
     setMenuOpen(false);
   };
 
   const goToSection = (sectionId) => {
     setMenuOpen(false);
+    setCartOpen(false);
 
     requestAnimationFrame(() => {
       const section = document.getElementById(sectionId);
@@ -147,20 +172,333 @@ function Header({ menuOpen, setMenuOpen, cart, favorites }) {
 
   const favoritesCount = favorites.length;
 
+  /* =====================================================
+     CALCULAR CARRITO
+     ===================================================== */
+
+  const calculateCart = () => {
+    let subtotal = 0;
+    let totalDiscount = 0;
+
+    cart.forEach((item) => {
+      const product = products.find(
+        (product) => product.id === item.id
+      );
+
+      if (!product) {
+        return;
+      }
+
+      const discount =
+        (product.price * product.descuento) / 100;
+
+      const finalPrice =
+        product.price - discount;
+
+      subtotal +=
+        product.price * item.quantity;
+
+      totalDiscount +=
+        discount * item.quantity;
+    });
+
+    return {
+      subtotal,
+      totalDiscount,
+      total: subtotal - totalDiscount,
+    };
+  };
+
+  const cartTotals = calculateCart();
+
   return (
     <header className="header-glass">
-      <div className="logo">Peri-Soft</div>
+
+      <div className="logo">
+        Peri-Soft
+      </div>
+
+      {/* =================================================
+          BOTÓN CARRITO
+          ================================================= */}
 
       <button
         type="button"
-        className={`hamburger-button ${menuOpen ? 'is-active' : ''}`}
-        onClick={() => setMenuOpen((current) => !current)}
-        aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
+        className="header-cart-button"
+        onClick={() =>
+          setCartOpen(
+            (current) => !current
+          )
+        }
+      >
+        🛒 Carrito ({cartCount})
+      </button>
+
+      {/* =================================================
+          VENTANA DEL CARRITO
+          ================================================= */}
+
+      {cartOpen && (
+        <div className="cart-menu">
+
+          <div className="cart-menu-header">
+
+            <h2>
+              🛒 Mi Carrito
+            </h2>
+
+            <button
+              type="button"
+              className="cart-close"
+              onClick={() =>
+                setCartOpen(false)
+              }
+            >
+              ✕
+            </button>
+
+          </div>
+
+          {cart.length === 0 ? (
+
+            <div className="cart-empty">
+
+              <div className="cart-empty-icon">
+                🛒
+              </div>
+
+              <h3>
+                Tu carrito está vacío
+              </h3>
+
+              <p>
+                Agrega productos desde el catálogo.
+              </p>
+
+            </div>
+
+          ) : (
+
+            <>
+
+              {/* PRODUCTOS */}
+
+              <div className="cart-menu-items">
+
+                {cart.map((item) => {
+
+                  const product =
+                    products.find(
+                      (product) =>
+                        product.id === item.id
+                    );
+
+                  if (!product) {
+                    return null;
+                  }
+
+                  const discount =
+                    (product.price *
+                      product.descuento) /
+                    100;
+
+                  const finalPrice =
+                    product.price -
+                    discount;
+
+                  const itemTotal =
+                    finalPrice *
+                    item.quantity;
+
+                  return (
+                    <div
+                      className="cart-menu-item"
+                      key={item.id}
+                    >
+
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        className="cart-menu-item-image"
+                      />
+
+                      <div className="cart-menu-item-info">
+
+                        <h3>
+                          {product.title}
+                        </h3>
+
+                        <p className="cart-item-color">
+                          {product.color}
+                        </p>
+
+                        {product.descuento > 0 && (
+                          <span className="cart-discount">
+                            -{product.descuento}%
+                          </span>
+                        )}
+
+                        <div className="cart-prices">
+
+                          {product.descuento > 0 && (
+                            <span className="cart-original-price">
+                              ${product.price.toFixed(2)}
+                            </span>
+                          )}
+
+                          <span className="cart-final-price">
+                            ${finalPrice.toFixed(2)}
+                          </span>
+
+                        </div>
+
+                        <div className="cart-item-controls">
+
+                          <button
+                            type="button"
+                            onClick={() =>
+                              updateCartQuantity(
+                                item.id,
+                                item.quantity - 1
+                              )
+                            }
+                          >
+                            −
+                          </button>
+
+                          <span>
+                            {item.quantity}
+                          </span>
+
+                          <button
+                            type="button"
+                            onClick={() =>
+                              updateCartQuantity(
+                                item.id,
+                                item.quantity + 1
+                              )
+                            }
+                          >
+                            +
+                          </button>
+
+                        </div>
+
+                        <p className="cart-item-total">
+                          Total: $
+                          {itemTotal.toFixed(2)}
+                        </p>
+
+                      </div>
+
+                      <button
+                        type="button"
+                        className="cart-remove"
+                        onClick={() =>
+                          removeFromCart(
+                            item.id
+                          )
+                        }
+                      >
+                        ✕
+                      </button>
+
+                    </div>
+                  );
+                })}
+
+              </div>
+
+              {/* =================================================
+                  RESUMEN
+                  ================================================= */}
+
+              <div className="cart-summary">
+
+                <div className="cart-summary-row">
+                  <span>
+                    Subtotal:
+                  </span>
+
+                  <span>
+                    $
+                    {cartTotals.subtotal.toFixed(
+                      2
+                    )}
+                  </span>
+                </div>
+
+                <div className="cart-summary-row cart-discount-row">
+                  <span>
+                    Descuento:
+                  </span>
+
+                  <span>
+                    -$
+                    {cartTotals.totalDiscount.toFixed(
+                      2
+                    )}
+                  </span>
+                </div>
+
+                <div className="cart-summary-total">
+
+                  <strong>
+                    Total a pagar:
+                  </strong>
+
+                  <strong>
+                    $
+                    {cartTotals.total.toFixed(
+                      2
+                    )}
+                  </strong>
+
+                </div>
+
+                <button
+                  type="button"
+                  className="checkout-btn"
+                >
+                  Ir al Pago
+                </button>
+
+              </div>
+
+            </>
+          )}
+
+        </div>
+      )}
+
+      {/* =================================================
+          MENÚ HAMBURGUESA
+          ================================================= */}
+
+      <button
+        type="button"
+        className={`hamburger-button ${
+          menuOpen
+            ? 'is-active'
+            : ''
+        }`}
+        onClick={() =>
+          setMenuOpen(
+            (current) => !current
+          )
+        }
+        aria-label={
+          menuOpen
+            ? 'Cerrar menú'
+            : 'Abrir menú'
+        }
         aria-expanded={menuOpen}
       >
+
         <span></span>
         <span></span>
         <span></span>
+
       </button>
 
       {menuOpen && (
@@ -171,11 +509,19 @@ function Header({ menuOpen, setMenuOpen, cart, favorites }) {
       )}
 
       <nav
-        className={`side-menu ${menuOpen ? 'menu-open' : ''}`}
+        className={`side-menu ${
+          menuOpen
+            ? 'menu-open'
+            : ''
+        }`}
         aria-label="Menú principal"
       >
+
         <div className="menu-header">
-          <h2>Menú</h2>
+
+          <h2>
+            Menú
+          </h2>
 
           <button
             type="button"
@@ -183,16 +529,20 @@ function Header({ menuOpen, setMenuOpen, cart, favorites }) {
             onClick={closeMenu}
             aria-label="Cerrar menú"
           >
-            
+            ✕
           </button>
+
         </div>
 
         <ul className="menu-links">
+
           <li>
             <button
               type="button"
               className="menu-link"
-              onClick={() => goToSection('hero')}
+              onClick={() =>
+                goToSection('hero')
+              }
             >
               Novedades
             </button>
@@ -202,7 +552,9 @@ function Header({ menuOpen, setMenuOpen, cart, favorites }) {
             <button
               type="button"
               className="menu-link"
-              onClick={() => goToSection('catalogo')}
+              onClick={() =>
+                goToSection('catalogo')
+              }
             >
               Catálogo
             </button>
@@ -214,7 +566,9 @@ function Header({ menuOpen, setMenuOpen, cart, favorites }) {
             <button
               type="button"
               className="menu-link"
-              onClick={() => goToSection('carrito')}
+              onClick={() =>
+                setCartOpen(true)
+              }
             >
               🛒 Carrito ({cartCount})
             </button>
@@ -224,7 +578,9 @@ function Header({ menuOpen, setMenuOpen, cart, favorites }) {
             <button
               type="button"
               className="menu-link"
-              onClick={() => goToSection('favoritos')}
+              onClick={() =>
+                goToSection('favoritos')
+              }
             >
               ❤️ Favoritos ({favoritesCount})
             </button>
@@ -234,13 +590,18 @@ function Header({ menuOpen, setMenuOpen, cart, favorites }) {
             <button
               type="button"
               className="menu-link"
-              onClick={() => goToSection('contacto')}
+              onClick={() =>
+                goToSection('contacto')
+              }
             >
               Contacto
             </button>
           </li>
+
         </ul>
+
       </nav>
+
     </header>
   );
 }
@@ -250,164 +611,280 @@ function Header({ menuOpen, setMenuOpen, cart, favorites }) {
    ===================================================== */
 
 function Catalog() {
+
   const navigate = useNavigate();
 
-  const [activeAd, setActiveAd] = useState(0);
-  const [switchFilter, setSwitchFilter] = useState('Todos');
-  const [priceOrder, setPriceOrder] = useState(null);
-  const [offersOnly, setOffersOnly] = useState(false);
+  const [activeAd, setActiveAd] =
+    useState(0);
 
-  // Funcionalidades nuevas
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [cart, setCart] = useState([]);
-  const [favorites, setFavorites] = useState([]);
+  const [switchFilter, setSwitchFilter] =
+    useState('Todos');
+
+  const [priceOrder, setPriceOrder] =
+    useState(null);
+
+  const [offersOnly, setOffersOnly] =
+    useState(false);
+
+  const [menuOpen, setMenuOpen] =
+    useState(false);
+
+  const [cart, setCart] =
+    useState([]);
+
+  const [favorites, setFavorites] =
+    useState([]);
+
+  /* =====================================================
+     CARRUSEL
+     ===================================================== */
 
   useEffect(() => {
-    const timer = window.setInterval(() => {
-      setActiveAd(
-        (currentAd) =>
-          (currentAd + 1) % advertisements.length
-      );
-    }, 5000);
 
-    return () => window.clearInterval(timer);
+    const timer =
+      window.setInterval(() => {
+
+        setActiveAd(
+          (currentAd) =>
+            (currentAd + 1) %
+            advertisements.length
+        );
+
+      }, 5000);
+
+    return () =>
+      window.clearInterval(timer);
+
   }, []);
 
   const showAd = (index) => {
+
     setActiveAd(
-      (index + advertisements.length) %
-        advertisements.length
+      (index +
+        advertisements.length) %
+      advertisements.length
     );
+
   };
 
-  const nextAd = () => showAd(activeAd + 1);
-  const previousAd = () => showAd(activeAd - 1);
+  const nextAd = () =>
+    showAd(activeAd + 1);
 
-  const filteredProducts = products
-    .filter(
-      (product) =>
-        switchFilter === 'Todos' ||
-        product.tipo_switch === switchFilter
-    )
-    .filter(
-      (product) =>
-        !offersOnly || product.descuento > 0
-    )
-    .sort((firstProduct, secondProduct) => {
-      if (priceOrder === 'high-to-low') {
-        return secondProduct.price - firstProduct.price;
-      }
+  const previousAd = () =>
+    showAd(activeAd - 1);
 
-      if (priceOrder === 'low-to-high') {
-        return firstProduct.price - secondProduct.price;
-      }
+  /* =====================================================
+     FILTROS
+     ===================================================== */
 
-      return 0;
-    });
+  const filteredProducts =
+    products
+      .filter(
+        (product) =>
+          switchFilter === 'Todos' ||
+          product.tipo_switch ===
+            switchFilter
+      )
+      .filter(
+        (product) =>
+          !offersOnly ||
+          product.descuento > 0
+      )
+      .sort(
+        (
+          firstProduct,
+          secondProduct
+        ) => {
+
+          if (
+            priceOrder ===
+            'high-to-low'
+          ) {
+            return (
+              secondProduct.price -
+              firstProduct.price
+            );
+          }
+
+          if (
+            priceOrder ===
+            'low-to-high'
+          ) {
+            return (
+              firstProduct.price -
+              secondProduct.price
+            );
+          }
+
+          return 0;
+
+        }
+      );
 
   const togglePriceOrder = () => {
-    setPriceOrder((currentOrder) => {
-      if (
-        currentOrder === null ||
-        currentOrder === 'low-to-high'
-      ) {
-        return 'high-to-low';
-      }
 
-      return 'low-to-high';
-    });
+    setPriceOrder(
+      (currentOrder) => {
+
+        if (
+          currentOrder === null ||
+          currentOrder ===
+            'low-to-high'
+        ) {
+          return 'high-to-low';
+        }
+
+        return 'low-to-high';
+
+      }
+    );
+
   };
 
   /* =====================================================
      CARRITO
      ===================================================== */
 
-  const handleAddToCart = (productId) => {
-    setCart((currentCart) => {
-      const existingItem = currentCart.find(
-        (item) => item.id === productId
-      );
+  const handleAddToCart = (
+    productId
+  ) => {
 
-      if (existingItem) {
-        return currentCart.map((item) =>
-          item.id === productId
-            ? {
-                ...item,
-                quantity: item.quantity + 1,
-              }
-            : item
-        );
+    setCart(
+      (currentCart) => {
+
+        const existingItem =
+          currentCart.find(
+            (item) =>
+              item.id ===
+              productId
+          );
+
+        if (existingItem) {
+
+          return currentCart.map(
+            (item) =>
+              item.id ===
+              productId
+                ? {
+                    ...item,
+                    quantity:
+                      item.quantity +
+                      1,
+                  }
+                : item
+          );
+
+        }
+
+        return [
+          ...currentCart,
+          {
+            id: productId,
+            quantity: 1,
+          },
+        ];
+
       }
-
-      return [
-        ...currentCart,
-        {
-          id: productId,
-          quantity: 1,
-        },
-      ];
-    });
-  };
-
-  const removeFromCart = (productId) => {
-    setCart((currentCart) =>
-      currentCart.filter(
-        (item) => item.id !== productId
-      )
     );
+
   };
 
-  const calculateTotal = () => {
-    return cart.reduce((total, item) => {
-      const product = products.find(
-        (p) => p.id === item.id
+  const removeFromCart = (
+    productId
+  ) => {
+
+    setCart(
+      (currentCart) =>
+        currentCart.filter(
+          (item) =>
+            item.id !==
+            productId
+        )
+    );
+
+  };
+
+  const updateCartQuantity = (
+    productId,
+    newQuantity
+  ) => {
+
+    if (newQuantity <= 0) {
+
+      removeFromCart(
+        productId
       );
 
-      if (!product) {
-        return total;
-      }
+      return;
+    }
 
-      const discount =
-        (product.price * product.descuento) / 100;
+    setCart(
+      (currentCart) =>
+        currentCart.map(
+          (item) =>
+            item.id ===
+            productId
+              ? {
+                  ...item,
+                  quantity:
+                    newQuantity,
+                }
+              : item
+        )
+    );
 
-      const finalPrice =
-        product.price - discount;
-
-      return (
-        total +
-        finalPrice * item.quantity
-      );
-    }, 0);
   };
 
   /* =====================================================
      FAVORITOS
      ===================================================== */
 
-  const handleToggleFavorite = (productId) => {
-    setFavorites((currentFavorites) => {
-      if (currentFavorites.includes(productId)) {
-        return currentFavorites.filter(
-          (id) => id !== productId
-        );
-      }
+  const handleToggleFavorite = (
+    productId
+  ) => {
 
-      return [
-        ...currentFavorites,
-        productId,
-      ];
-    });
+    setFavorites(
+      (currentFavorites) => {
+
+        if (
+          currentFavorites.includes(
+            productId
+          )
+        ) {
+
+          return currentFavorites.filter(
+            (id) =>
+              id !== productId
+          );
+
+        }
+
+        return [
+          ...currentFavorites,
+          productId,
+        ];
+
+      }
+    );
+
   };
 
-  const removeFromFavorites = (productId) => {
-    setFavorites((currentFavorites) =>
-      currentFavorites.filter(
-        (id) => id !== productId
-      )
+  const removeFromFavorites = (
+    productId
+  ) => {
+
+    setFavorites(
+      (currentFavorites) =>
+        currentFavorites.filter(
+          (id) =>
+            id !== productId
+        )
     );
+
   };
 
   return (
+
     <main className="catalog-page">
 
       <Header
@@ -415,44 +892,68 @@ function Catalog() {
         setMenuOpen={setMenuOpen}
         cart={cart}
         favorites={favorites}
+        removeFromCart={removeFromCart}
+        updateCartQuantity={
+          updateCartQuantity
+        }
       />
 
       {/* =================================================
-         CARRUSEL
-         ================================================= */}
+          CARRUSEL
+          ================================================= */}
 
       <section
         id="hero"
         className="advertisement-carousel"
         aria-label="Publicidad destacada"
       >
+
         <div className="carousel-slide">
+
           <img
-            src={advertisements[activeAd].image}
-            alt={advertisements[activeAd].alt}
+            src={
+              advertisements[
+                activeAd
+              ].image
+            }
+            alt={
+              advertisements[
+                activeAd
+              ].alt
+            }
             className="carousel-image"
           />
 
           <div className="carousel-content">
+
             <span className="carousel-label">
               Ofertas
             </span>
 
             <h2>
-              {advertisements[activeAd].title}
+              {
+                advertisements[
+                  activeAd
+                ].title
+              }
             </h2>
 
             <p>
-              {advertisements[activeAd].text}
+              {
+                advertisements[
+                  activeAd
+                ].text
+              }
             </p>
+
           </div>
+
         </div>
 
         <button
           type="button"
           className="carousel-control carousel-control-previous"
           onClick={previousAd}
-          aria-label="Publicidad anterior"
         >
           &#10094;
         </button>
@@ -461,49 +962,53 @@ function Catalog() {
           type="button"
           className="carousel-control carousel-control-next"
           onClick={nextAd}
-          aria-label="Siguiente publicidad"
         >
           &#10095;
         </button>
 
-        <div
-          className="carousel-dots"
-          aria-label="Seleccionar publicidad"
-        >
+        <div className="carousel-dots">
+
           {advertisements.map(
-            (advertisement, index) => (
+            (
+              advertisement,
+              index
+            ) => (
+
               <button
                 type="button"
                 className={`carousel-dot ${
-                  index === activeAd
+                  index ===
+                  activeAd
                     ? 'is-active'
                     : ''
                 }`}
-                onClick={() => showAd(index)}
-                aria-label={`Mostrar publicidad ${index + 1}`}
-                aria-current={
-                  index === activeAd
-                    ? 'true'
-                    : undefined
+                onClick={() =>
+                  showAd(index)
                 }
-                key={advertisement.title}
+                key={
+                  advertisement.title
+                }
               />
+
             )
           )}
+
         </div>
+
       </section>
 
       {/* =================================================
-         FILTROS
-         ================================================= */}
+          FILTROS
+          ================================================= */}
 
-      <div
-        className="filter-bar"
-        aria-label="Filtros de productos"
-      >
-        <h2>Filtros</h2>
+      <div className="filter-bar">
+
+        <h2>
+          Filtros
+        </h2>
 
         <label className="filter-select-label">
+
           Tipo de switch
 
           <select
@@ -514,6 +1019,7 @@ function Catalog() {
               )
             }
           >
+
             <option value="Todos">
               Todos
             </option>
@@ -529,7 +1035,9 @@ function Catalog() {
             <option value="Brown">
               Brown
             </option>
+
           </select>
+
         </label>
 
         <button
@@ -539,15 +1047,13 @@ function Catalog() {
               ? 'is-active'
               : ''
           }`}
-          onClick={togglePriceOrder}
-          aria-label={
-            priceOrder === 'high-to-low'
-              ? 'Ordenar precio de mayor a menor'
-              : 'Ordenar precio de menor a mayor'
+          onClick={
+            togglePriceOrder
           }
         >
           Precio{' '}
-          {priceOrder === 'high-to-low'
+          {priceOrder ===
+          'high-to-low'
             ? '↑'
             : '↓'}
         </button>
@@ -565,27 +1071,29 @@ function Catalog() {
                 !currentValue
             )
           }
-          aria-pressed={offersOnly}
         >
           Ofertas
         </button>
+
       </div>
 
       {/* =================================================
-         CATÁLOGO
-         ================================================= */}
+          CATÁLOGO
+          ================================================= */}
 
       <section
         id="catalogo"
         className="catalog-grid"
-        aria-label="Lista de teclados"
       >
+
         {filteredProducts.map(
           (product) => (
+
             <article
               className="product-card"
               key={product.id}
             >
+
               <div className="product-image-wrap">
 
                 <img
@@ -594,10 +1102,13 @@ function Catalog() {
                   className="product-image"
                 />
 
-                {product.descuento > 0 && (
+                {product.descuento >
+                  0 && (
+
                   <span className="discount-badge">
                     -{product.descuento}%
                   </span>
+
                 )}
 
                 <button
@@ -614,13 +1125,6 @@ function Catalog() {
                       product.id
                     )
                   }
-                  aria-label={
-                    favorites.includes(
-                      product.id
-                    )
-                      ? 'Eliminar de favoritos'
-                      : 'Agregar a favoritos'
-                  }
                 >
                   {favorites.includes(
                     product.id
@@ -628,9 +1132,11 @@ function Catalog() {
                     ? '❤️'
                     : '🤍'}
                 </button>
+
               </div>
 
               <div className="product-info">
+
                 <span className="product-tag">
                   {product.color}
                 </span>
@@ -642,6 +1148,7 @@ function Catalog() {
                 <h2>
                   ${product.price.toFixed(2)}
                 </h2>
+
               </div>
 
               <div className="product-actions">
@@ -671,222 +1178,147 @@ function Catalog() {
                 </button>
 
               </div>
+
             </article>
+
           )
         )}
 
-        {filteredProducts.length === 0 && (
+        {filteredProducts.length ===
+          0 && (
+
           <p className="empty-results">
             No hay productos con esos filtros.
           </p>
+
         )}
+
       </section>
 
       {/* =================================================
-         CARRITO
-         ================================================= */}
+          FAVORITOS
+          ================================================= */}
 
       <section
-        id="carrito"
-        className="cart-section"
+        id="favoritos"
+        className="favorites-section"
       >
-        <h2>🛒 Mi Carrito</h2>
 
-        {cart.length === 0 ? (
+        <h2>
+          ❤️ Mis Favoritos
+        </h2>
+
+        {favorites.length ===
+        0 ? (
+
           <p className="empty-message">
-            Tu carrito está vacío.
+            No tienes productos favoritos.
           </p>
-        ) : (
-          <>
-            <div className="cart-items">
 
-              {cart.map((item) => {
+        ) : (
+
+          <div className="favorites-list">
+
+            {favorites.map(
+              (favId) => {
+
                 const product =
                   products.find(
                     (p) =>
-                      p.id === item.id
+                      p.id ===
+                      favId
                   );
 
                 if (!product) {
                   return null;
                 }
 
-                const discount =
-                  (product.price *
-                    product.descuento) /
-                  100;
-
-                const finalPrice =
-                  product.price -
-                  discount;
-
                 return (
+
                   <div
-                    key={item.id}
-                    className="cart-item"
+                    key={favId}
+                    className="favorite-item"
                   >
+
                     <img
                       src={product.image}
                       alt={product.title}
-                      className="cart-item-image"
+                      className="favorite-item-image"
                     />
 
-                    <div className="cart-item-info">
+                    <div className="favorite-item-info">
+
                       <h4>
                         {product.title}
                       </h4>
 
                       <p>
-                        Cantidad:{' '}
-                        {item.quantity}
+                        {product.color}
                       </p>
 
                       <p className="item-price">
                         $
-                        {(
-                          finalPrice *
-                          item.quantity
-                        ).toFixed(2)}
+                        {product.price.toFixed(
+                          2
+                        )}
                       </p>
+
                     </div>
 
                     <button
                       type="button"
                       className="remove-btn"
                       onClick={() =>
-                        removeFromCart(
-                          item.id
+                        removeFromFavorites(
+                          favId
                         )
                       }
-                      aria-label={`Eliminar ${product.title}`}
                     >
                       ✕
                     </button>
+
                   </div>
-                );
-              })}
 
-            </div>
-
-            <div className="cart-total">
-              <strong>
-                Total: $
-                {calculateTotal().toFixed(2)}
-              </strong>
-            </div>
-
-            <button
-              type="button"
-              className="checkout-btn"
-            >
-              Ir al Pago
-            </button>
-          </>
-        )}
-      </section>
-
-      {/* =================================================
-         FAVORITOS
-         ================================================= */}
-
-      <section
-        id="favoritos"
-        className="favorites-section"
-      >
-        <h2>❤️ Mis Favoritos</h2>
-
-        {favorites.length === 0 ? (
-          <p className="empty-message">
-            No tienes productos favoritos.
-          </p>
-        ) : (
-          <div className="favorites-list">
-
-            {favorites.map((favId) => {
-              const product =
-                products.find(
-                  (p) => p.id === favId
                 );
 
-              if (!product) {
-                return null;
               }
-
-              return (
-                <div
-                  key={favId}
-                  className="favorite-item"
-                >
-                  <img
-                    src={product.image}
-                    alt={product.title}
-                    className="favorite-item-image"
-                  />
-
-                  <div className="favorite-item-info">
-                    <h4>
-                      {product.title}
-                    </h4>
-
-                    <p>
-                      {product.color}
-                    </p>
-
-                    <p className="item-price">
-                      $
-                      {product.price.toFixed(
-                        2
-                      )}
-                    </p>
-                  </div>
-
-                  <button
-                    type="button"
-                    className="remove-btn"
-                    onClick={() =>
-                      removeFromFavorites(
-                        favId
-                      )
-                    }
-                    aria-label={`Eliminar ${product.title}`}
-                  >
-                    ✕
-                  </button>
-                </div>
-              );
-            })}
+            )}
 
           </div>
+
         )}
+
       </section>
 
       <hr />
 
       {/* =================================================
-         FOOTER
-         ================================================= */}
+          FOOTER
+          ================================================= */}
 
       <footer
         id="contacto"
         className="footer"
       >
-        <section id="contacto">
-          <div className="footer-content">
-            <p>
-              &copy; 2026 Peri-Soft.
-              Todos los derechos reservados.
-            </p>
 
-            <p>
-              Dirección:
-              Constitución 3098-Piso 1
-            </p>
+        <div className="footer-content">
 
-            <p>
-              Teléfono: 8115724815
-            </p>
-          </div>
-        </section>
+          <p>
+            &copy; 2026 Peri-Soft.
+            Todos los derechos reservados.
+          </p>
+
+          <p>
+            Dirección:
+            Constitución 3098-Piso 1
+          </p>
+
+          <p>
+            Teléfono: 8115724815
+          </p>
+
+        </div>
+
       </footer>
 
     </main>
@@ -894,50 +1326,67 @@ function Catalog() {
 }
 
 /* =====================================================
-   PÁGINA DEL PRODUCTO
+   PRODUCT PAGE
    ===================================================== */
 
 function ProductPage() {
-  const navigate = useNavigate();
-  const { productId } = useParams();
 
-  const product = products.find(
-    (item) =>
-      item.id === Number(productId)
-  );
+  const navigate =
+    useNavigate();
+
+  const { productId } =
+    useParams();
+
+  const product =
+    products.find(
+      (item) =>
+        item.id ===
+        Number(productId)
+    );
 
   if (!product) {
+
     return (
       <Navigate
         to="/"
         replace
       />
     );
+
   }
 
   return (
     <Resultados
       product={product}
-      onBack={() => navigate('/')}
+      onBack={() =>
+        navigate('/')
+      }
     />
   );
 }
 
 /* =====================================================
-   APP / ROUTES
+   APP
    ===================================================== */
 
 export default function App() {
+
   return (
+
     <Routes>
+
       <Route
         path="/"
-        element={<Catalog />}
+        element={
+          <Catalog />
+        }
       />
 
       <Route
         path="/producto/:productId"
-        element={<ProductPage />}
+        element={
+          <ProductPage />
+        }
       />
 
       <Route
@@ -949,6 +1398,8 @@ export default function App() {
           />
         }
       />
+
     </Routes>
+
   );
 }
