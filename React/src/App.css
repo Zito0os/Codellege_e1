@@ -300,5 +300,721 @@ section {
   color: #646cff;               /* Cambia de color suavemente al pasar el mouse */
 }
 
+/* =====================================================
+   MENÚ HAMBURGUESA
+   ===================================================== */
+
+.header-glass {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hamburger-button {
+  margin-left: auto;
+
+  background: none !important;
+  border: none !important;
+
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  width: 30px;
+  height: 22px;
+
+  padding: 0;
+
+  z-index: 1002;
+}
+
+.hamburger-button span {
+  display: block;
+
+  width: 100%;
+  height: 3px;
+
+  background-color: #ffffff;
+
+  border-radius: 3px;
+
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+}
+
+/* Animación a X */
+
+.hamburger-button.is-active span:nth-child(1) {
+  transform: translateY(9.5px) rotate(45deg);
+}
+
+.hamburger-button.is-active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-button.is-active span:nth-child(3) {
+  transform: translateY(-9.5px) rotate(-45deg);
+}
+
+
+/* =====================================================
+   MENÚ LATERAL
+   ===================================================== */
+
+.side-menu {
+  position: fixed;
+
+  top: 0;
+  right: -320px;
+
+  width: 320px;
+  height: 100vh;
+
+  background-color: #1e293b;
+
+  box-shadow:
+    -5px 0 25px rgba(0, 0, 0, 0.3);
+
+  z-index: 1001;
+
+  transition:
+    right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  padding: 2rem;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.side-menu.menu-open {
+  right: 0;
+}
+
+
+/* =====================================================
+   ENCABEZADO DEL MENÚ
+   ===================================================== */
+
+.menu-header {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  border-bottom:
+    1px solid rgba(255, 255, 255, 0.1);
+
+  padding-bottom: 1rem;
+}
+
+.menu-header h2 {
+  color: #ffffff;
+
+  font-size: 1.5rem;
+
+  margin: 0;
+}
+
+.menu-close {
+  background: none !important;
+  border: none !important;
+
+  color: #ffffff;
+
+  font-size: 1.5rem;
+
+  cursor: pointer;
+
+  padding: 0.5rem;
+
+  transition: opacity 0.2s ease;
+}
+
+.menu-close:hover {
+  opacity: 0.7;
+}
+
+
+/* =====================================================
+   LINKS DEL MENÚ
+   ===================================================== */
+
+.menu-links {
+  list-style: none !important;
+
+  padding: 0 !important;
+  margin: 2rem 0 0 0 !important;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 1rem;
+}
+
+.menu-links li {
+  list-style: none !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.menu-link {
+  width: 100%;
+
+  background: none !important;
+  border: none !important;
+
+  color: #dce6f3 !important;
+
+  font-size: 1.1rem;
+
+  font-weight: 500;
+
+  cursor: pointer;
+
+  padding: 0.6rem 0;
+
+  text-align: left;
+
+  display: block;
+
+  transition:
+    color 0.2s ease,
+    padding-left 0.2s ease;
+}
+
+.menu-link:hover {
+  color: #ffffff !important;
+
+  padding-left: 8px;
+}
+
+
+/* Línea divisoria */
+
+.menu-divider {
+  height: 1px;
+
+  background-color:
+    rgba(255, 255, 255, 0.1);
+
+  margin: 0.5rem 0 !important;
+}
+
+
+/* =====================================================
+   FONDO OSCURO CUANDO SE ABRE EL MENÚ
+   ===================================================== */
+
+.menu-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  background-color:
+    rgba(0, 0, 0, 0.5);
+
+  backdrop-filter: blur(4px);
+
+  -webkit-backdrop-filter: blur(4px);
+
+  z-index: 1000;
+}
+
+
+/* =====================================================
+   BOTÓN DE FAVORITOS EN PRODUCTOS
+   ===================================================== */
+
+.product-image-wrap {
+  position: relative;
+}
+
+.favorite-heart {
+  position: absolute;
+
+  top: 12px;
+  right: 12px;
+
+  width: 42px;
+  height: 42px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.92);
+
+  cursor: pointer;
+
+  font-size: 1.2rem;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  z-index: 5;
+
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.favorite-heart:hover {
+  transform: scale(1.1);
+
+  background: #ffffff;
+
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.favorite-heart.active {
+  background: #ffffff;
+}
+
+
+/* =====================================================
+   ETIQUETA DE DESCUENTO
+   ===================================================== */
+
+.discount-badge {
+  position: absolute;
+
+  top: 12px;
+  left: 12px;
+
+  background: #ef4444;
+
+  color: #ffffff;
+
+  padding: 5px 9px;
+
+  border-radius: 6px;
+
+  font-size: 0.8rem;
+
+  font-weight: 700;
+
+  z-index: 4;
+}
+
+
+/* =====================================================
+   BOTONES DE PRODUCTO
+   ===================================================== */
+
+.product-actions {
+  display: flex;
+
+  gap: 10px;
+
+  width: 100%;
+
+  margin-top: 12px;
+}
+
+.product-actions .product-button {
+  flex: 1;
+}
+
+.product-button-secondary {
+  background-color: #334155 !important;
+
+  color: #ffffff !important;
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.15) !important;
+}
+
+.product-button-secondary:hover {
+  background-color: #475569 !important;
+}
+
+
+/* =====================================================
+   CARRITO
+   ===================================================== */
+
+.cart-section {
+  width: 100%;
+
+  max-width: 1200px;
+
+  margin: 0 auto;
+
+  padding: 6rem 2rem 4rem;
+}
+
+.cart-section h2 {
+  margin-bottom: 2rem;
+}
+
+.cart-items {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 15px;
+}
+
+.cart-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 20px;
+
+  padding: 15px;
+
+  border-radius: 12px;
+
+  background:
+    rgba(255, 255, 255, 0.06);
+
+  border:
+    1px solid rgba(255, 255, 255, 0.08);
+
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.cart-item:hover {
+  transform: translateY(-2px);
+
+  background:
+    rgba(255, 255, 255, 0.09);
+}
+
+.cart-item-image {
+  width: 90px;
+  height: 90px;
+
+  object-fit: cover;
+
+  border-radius: 10px;
+
+  flex-shrink: 0;
+}
+
+.cart-item-info {
+  flex: 1;
+}
+
+.cart-item-info h4 {
+  margin-bottom: 8px;
+
+  font-size: 1.1rem;
+}
+
+.cart-item-info p {
+  margin: 4px 0;
+}
+
+.item-price {
+  font-weight: 700;
+
+  font-size: 1.05rem;
+}
+
+
+/* Botón eliminar */
+
+.remove-btn {
+  border: none;
+
+  background: transparent;
+
+  color: #ef4444;
+
+  font-size: 1.2rem;
+
+  cursor: pointer;
+
+  padding: 10px;
+
+  border-radius: 50%;
+
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.remove-btn:hover {
+  transform: scale(1.1);
+
+  background:
+    rgba(239, 68, 68, 0.12);
+}
+
+
+/* Total */
+
+.cart-total {
+  margin-top: 25px;
+
+  padding-top: 20px;
+
+  border-top:
+    1px solid rgba(255, 255, 255, 0.1);
+
+  text-align: right;
+
+  font-size: 1.3rem;
+}
+
+
+/* Botón de pago */
+
+.checkout-btn {
+  display: block;
+
+  margin:
+    20px 0 0 auto;
+
+  padding:
+    12px 25px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background-color: #475569;
+
+  color: #ffffff;
+
+  font-size: 1rem;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.checkout-btn:hover {
+  background-color: #64748b;
+
+  transform: translateY(-2px);
+}
+
+
+/* =====================================================
+   FAVORITOS
+   ===================================================== */
+
+.favorites-section {
+  width: 100%;
+
+  max-width: 1200px;
+
+  margin: 0 auto;
+
+  padding: 6rem 2rem 4rem;
+}
+
+.favorites-section h2 {
+  margin-bottom: 2rem;
+}
+
+.favorites-list {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 15px;
+}
+
+.favorite-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 20px;
+
+  padding: 15px;
+
+  border-radius: 12px;
+
+  background:
+    rgba(255, 255, 255, 0.06);
+
+  border:
+    1px solid rgba(255, 255, 255, 0.08);
+
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.favorite-item:hover {
+  transform: translateY(-2px);
+
+  background:
+    rgba(255, 255, 255, 0.09);
+}
+
+.favorite-item-image {
+  width: 90px;
+  height: 90px;
+
+  object-fit: cover;
+
+  border-radius: 10px;
+
+  flex-shrink: 0;
+}
+
+.favorite-item-info {
+  flex: 1;
+}
+
+.favorite-item-info h4 {
+  margin-bottom: 8px;
+
+  font-size: 1.1rem;
+}
+
+.favorite-item-info p {
+  margin: 4px 0;
+}
+
+
+/* =====================================================
+   MENSAJES VACÍOS
+   ===================================================== */
+
+.empty-message {
+  padding: 25px;
+
+  text-align: center;
+
+  opacity: 0.7;
+
+  border-radius: 10px;
+
+  background:
+    rgba(255, 255, 255, 0.04);
+}
+
+
+/* =====================================================
+   AJUSTES PARA EL SCROLL DE LAS SECCIONES
+   ===================================================== */
+
+#carrito,
+#favoritos,
+#contacto {
+  scroll-margin-top: 80px;
+}
+
+
+/* =====================================================
+   RESPONSIVE - TABLETS
+   ===================================================== */
+
+@media (max-width: 768px) {
+
+  .side-menu {
+    width: 280px;
+
+    right: -280px;
+  }
+
+  .cart-section,
+  .favorites-section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .cart-item,
+  .favorite-item {
+    gap: 12px;
+  }
+
+  .cart-item-image,
+  .favorite-item-image {
+    width: 70px;
+    height: 70px;
+  }
+
+  .product-actions {
+    flex-direction: column;
+  }
+
+  .product-actions .product-button {
+    width: 100%;
+  }
+}
+
+
+/* =====================================================
+   RESPONSIVE - CELULARES
+   ===================================================== */
+
+@media (max-width: 480px) {
+
+  .hamburger-button {
+    width: 26px;
+    height: 20px;
+  }
+
+  .side-menu {
+    width: 85%;
+    right: -85%;
+
+    padding: 1.5rem;
+  }
+
+  .cart-item,
+  .favorite-item {
+    flex-wrap: wrap;
+  }
+
+  .cart-item-image,
+  .favorite-item-image {
+    width: 65px;
+    height: 65px;
+  }
+
+  .cart-item-info,
+  .favorite-item-info {
+    min-width: 0;
+  }
+
+  .remove-btn {
+    margin-left: auto;
+  }
+
+  .cart-total {
+    text-align: center;
+  }
+
+  .checkout-btn {
+    width: 100%;
+  }
+
+  .favorite-heart {
+    width: 38px;
+    height: 38px;
+
+    font-size: 1rem;
+  }
+}
 
 
