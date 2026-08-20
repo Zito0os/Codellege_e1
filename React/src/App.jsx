@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { Navigate, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 
 import cor from './assets/cor.jpg';
-import RAZER from './assets/RAZER.jpg';
-import REDRAGON from './assets/REDRAGON.jpg';
-import LOGITECH from './assets/LOGITECH.jpg';
-import EPOMAKER from './assets/LOGITECH.jpg';
+import RAZER from './assets/RAZER.PNG';
+import REDRAGON from './assets/REDDRAGON.PNG';
+import LOGITECH from './assets/LOGITECH.PNG';
+import EPOMAKER from './assets/EPOMAKER.PNG';
 import Resultados from './Resultados';
-import log from './assets/log.jpg';
+import log from './assets/log.PNG';
 import ter from './assets/ter.jpg';
 import arco from './assets/arco.jpg';
 import './App.css';
