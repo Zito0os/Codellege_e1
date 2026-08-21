@@ -12,6 +12,10 @@ import RAZER from './assets/RAZER.PNG';
 import REDRAGON from './assets/REDDRAGON.PNG';
 import LOGITECH from './assets/LOGITECH.PNG';
 import EPOMAKER from './assets/EPOMAKER.PNG';
+import iconface from './assets/iconface.PNG';
+import iconinsta from './assets/iconinsta.PNG';
+import iconwhatsapp from './assets/iconwhatsapp.PNG';
+import icontiktok from './assets/icontiktok.PNG';
 import Resultados from './Resultados';
 import log from './assets/log.PNG';
 import ter from './assets/ter.jpg';
@@ -1296,30 +1300,57 @@ function Catalog() {
           FOOTER
           ================================================= */}
 
-      <footer
-        id="contacto"
-        className="footer"
-      >
+      <footer className="footer">
+  {/* Columna 1 */}
+  <div className="footer-column">
+    <h4>Soporte al cliente</h4>
+    <ul className="footer-nav-list">
+      <li><a href="#">Seguimiento de Pedido</a></li>
+      <li><a href="#">Envíos y Devoluciones</a></li>
+      <li><a href="#">Preguntas Frecuentes</a></li>
+    </ul>
+  </div>
 
-        <div className="footer-content">
+  {/* Columna 2 */}
+  <div className="footer-column">
+    <h4>Acerca de Peri-Soft</h4>
+    <ul className="footer-nav-list">
+      <li><a href="#">Quiénes Somos</a></li>
+      <li><a href="#">Términos y Condiciones</a></li>
+      <li><a href="#">Política de Privacidad</a></li>
+    </ul>
+  </div>
 
-          <p>
-            &copy; 2026 Peri-Soft.
-            Todos los derechos reservados.
-          </p>
+  {/* Columna 3 */}
+  <div className="footer-column">
+    <h4>Promociones</h4>
+    <ul className="footer-nav-list">
+      <li><a href="#">Ofertas del Mes</a></li>
+      <li><a href="#">Cupones de Descuento</a></li>
+      <li><a href="#">Kits Completos</a></li>
+    </ul>
+  </div> {/* <-- Aquí faltaba este cierre */}
 
-          <p>
-            Dirección:
-            Constitución 3098-Piso 1
-          </p>
+   {/* Columna 4 */}
+<div className="footer-column">
+  <h4>Redes sociales</h4>
+  <div className="social-icons-container">
+    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" title="Facebook">
+      <img src={iconface} alt="Facebook" className="social-img-icon" /> 
+    </a>
+    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" title="Instagram">
+      <img src={iconinsta} alt="Instagram" className="social-img-icon" /> 
+    </a>
+    <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" title="YouTube">
+      <img src={iconwhatsapp} alt="YouTube" className="social-img-icon" /> 
+    </a>
+    <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" title="TikTok">
+      <img src={icontiktok} alt="TikTok" className="social-img-icon" /> 
+    </a>
+  </div>
+</div>
+</footer>
 
-          <p>
-            Teléfono: 8115724815
-          </p>
-
-        </div>
-
-      </footer>
 
     </main>
   );
