@@ -16,6 +16,9 @@ import iconface from './assets/facebook.png';
 import iconinsta from './assets/instagram.png';
 import iconyoutube from './assets/youtube.png';
 import icontiktok from './assets/tiktok.png';
+import pub1 from './assets/pub1.jpg';
+import pub2 from './assets/pub2.jpg';
+import pub3 from './assets/pub3.jpg';
 import Resultados from './Resultados';
 import Compra from './Compra_realizada';
 import log from './assets/log.PNG';
@@ -31,7 +34,7 @@ const products = [
     descuento: 10,
     tipo_switch: 'Blue',
     price: 899.00,
-    description: 'Teclado mecanico barato con buena luz, para empezar en gaming.',
+    description: 'El aliado perfecto para dar el salto al gaming competitivo sin gastar de más. Con su formato compacto del 60%, este Redragon libera espacio vital en tu escritorio para mover el mouse con total libertad. Sus switches Blue ofrecen esa respuesta táctil y el clásico sonido "clicky" súper preciso en cada partida.',
     image: REDRAGON,
     id: 1,
   },
@@ -41,7 +44,7 @@ const products = [
     tipo_switch: 'Red',
     descuento: 0,
     price: 2499.00,
-    description: 'Teclado mas caro, buena calidad y se siente solido.',
+    description: 'El buque insignia definitivo para tu setup. Construcción sólida en aluminio cepillado con switches Red lineales para una velocidad de respuesta instantánea y fluida. Incluye panel de control táctil, teclas macro dedicadas y reposamuñecas ergonómico de máximo confort para dominar cualquier partida.',
     image: cor,
     id: 2,
   },
@@ -51,7 +54,7 @@ const products = [
     tipo_switch: 'Brown',
     descuento: 15,
     price: 1899.00,
-    description: 'Switches rapidos y RGB, pensado para jugar.',
+    description:'Diseñado para llevar tu rendimiento al siguiente nivel. Equipado con switches Brown de respuesta táctil equilibrada y silenciosa, este teclado Razer combina la velocidad necesaria para partidas competitivas con la comodidad ideal para largas sesiones de juego o trabajo.',
     image: RAZER,
     id: 3,
   },
@@ -61,7 +64,7 @@ const products = [
     tipo_switch: 'Brown',
     descuento: 0,
     price: 1599.00,
-    description: 'Sirve bien para trabajo y tambien para jugar.',
+    description: 'Diseñado bajo los estándares del gaming profesional. Su formato TKL optimiza el espacio en tu escritorio para un control absoluto del mouse, mientras que sus switches Brown ofrecen una respuesta táctil rápida, silenciosa y ultraprecisa. La combinación ideal para dominar tanto en partidas competitivas como en tu jornada diaria.',
     image: LOGITECH,
     id: 4,
   },
@@ -71,7 +74,7 @@ const products = [
     tipo_switch: 'Blue',
     descuento: 0,
     price: 1600.00,
-    description: 'Teclado wireless con RGB.',
+    description: 'Libertad inalámbrica y un diseño ultra compacto para tu setup. Este Epomaker combina una excelente calidad de construcción con conectividad wireless para mantener tu escritorio impecable y libre de cables. Equipado con switches Blue para una respuesta táctil instantánea y el inconfundible sonido "clicky" en cada pulsación.',
     image: EPOMAKER,
     id: 5,
   },
@@ -81,7 +84,7 @@ const products = [
     tipo_switch: 'Red',
     descuento: 0,
     price: 1400.00,
-    description: 'Teclado arcoiris negro.',
+    description: 'Estética vibrante y velocidad en cada tecla. Este modelo cuenta con iluminación arcoíris envolvente y switches Red lineales que garantizan pulsaciones suaves, fluidas y ultrarrápidas sin resistencia al presionar. Su diseño de teclas flotantes no solo luce increíble en tu escritorio, sino que facilita la limpieza y mejora la ergonomía en largas sesiones.',
     image: arco,
     id: 6,
   },
@@ -91,7 +94,7 @@ const products = [
     tipo_switch: 'Brown',
     descuento: 0,
     price: 1799.00,
-    description: '4 efectos de iluminacion.',
+    description: 'Estética lateral envolvente y tacto equilibrado en cada tecla. Este teclado Terport destaca por su exclusiva tira de iluminación RGB en los bordes laterales con 4 modos configurables para darle una atmósfera única a tu setup. Equipado con switches Brown, ofrece el punto exacto entre respuesta táctil rápida para gaming y suavidad silenciosa para trabajo prolongado.',
     image: ter,
     id: 7,
   },
@@ -101,7 +104,7 @@ const products = [
     tipo_switch: 'Blue',
     descuento: 50,
     price: 1399.00,
-    description: 'Teclado compacto bluetooth para windows.',
+    description: 'Estilo vibrante y libertad inalámbrica en un solo dispositivo. Este teclado Logitech en acabado rosa magenta aporta una estética audaz y moderna a tu setup. Su formato compacto con conectividad Bluetooth optimiza tu espacio de trabajo sin cables, mientras que sus switches Blue ofrecen una respuesta táctil ultraprecisa con el clásico clic audible en cada pulsación.',
     image: log,
     id: 8,
   },
@@ -110,22 +113,22 @@ const products = [
 // banners hero
 const advertisements = [
   {
-    image: RAZER,
+    image: pub1,
     alt: 'Promo Razer',
     title: 'Modelos 2025 en descuento',
-    text: 'Teclados en oferta esta semana.',
+    text: 'Teclados en oferta por tiempo limitado.',
   },
   {
-    image: LOGITECH,
+    image: pub2,
     alt: 'Promo Logitech',
     title: 'Arma tu setup',
-    text: 'Encuentra el teclado que te acomode.',
+    text: 'Gana tus partidas sin imput-lag',
   },
   {
-    image: log,
-    alt: 'Promo Logitech rosa',
+    image: pub3,
+    alt: 'Promo Logitech mc',
     title: 'RGB incluido',
-    text: 'Modelos con iluminacion para el escritorio.',
+    text: 'Modelos tematizados, eligelo a tu manera.',
   },
 ];
 
