@@ -9,75 +9,86 @@ html {
 }
 
 body {
-  background-color: #0f172a;
-  color: #ffffff;
-  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(165deg, #070b14 0%, #0c1220 42%, #101828 100%);
+  color: #e8eef7;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: 'Plus Jakarta Sans', Arial, Helvetica, sans-serif;
+  font-weight: 900;
 }
 
 .catalog-page {
-  padding-top: 80px;
-  min-height: 100vh;
+  padding-top: 10vh;
+  min-height: auto;
+  width: 100%;
 }
-
-/* =====================================================
-   HEADER Y NAVEGACIÓN
-   ===================================================== */
 
 .header-glass {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 80px;
+  height: 10vh;
+  min-height: 64px;
   z-index: 1000;
   display: flex;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: rgba(42, 60, 102, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, rgba(12, 18, 32, 0.96) 0%, rgba(10, 16, 28, 0.88) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(130, 155, 190, 0.16);
 }
 
 .logo {
-  color: #ffffff;
-  font-size: 2.25rem;
-  font-weight: 700;
+  color: #f3f7ff;
+  font-family: Orbitron, Arial, Helvetica, sans-serif;
+  font-size: 2.1rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
 }
 
 .header-cart-button {
   margin-left: auto;
   margin-right: 25px;
-  padding: 10px 18px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 8px 12px;
+  border: 1px solid rgba(130, 155, 190, 0.22);
   border-radius: 8px;
-  background-color: #334155;
-  color: #ffffff;
-  font-size: 15px;
+  background: linear-gradient(135deg, #24344f 0%, #1a263b 100%);
+  color: #e8eef7;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .header-cart-button:hover {
-  background-color: #475569;
+  background: linear-gradient(135deg, #2d4263 0%, #22324a 100%);
   transform: translateY(-2px);
 }
 
-/* =====================================================
-   VENTANA DEL CARRITO
-   ===================================================== */
+.header-cart-button svg {
+  display: block;
+}
 
 .cart-menu {
   position: fixed;
-  top: 80px;
+  top: 10vh;
   right: 20px;
   width: 390px;
-  max-height: calc(100vh - 100px);
-  background-color: #1e293b;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  max-height: calc(100vh - 12vh);
+  background: linear-gradient(180deg, #151e30 0%, #101826 100%);
+  border: 1px solid rgba(130, 155, 190, 0.18);
   border-radius: 16px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
   z-index: 2000;
   overflow: hidden;
   animation: cartAppear 0.25s ease;
@@ -99,8 +110,8 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 18px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background-color: #24324d;
+  border-bottom: 1px solid rgba(130, 155, 190, 0.14);
+  background: linear-gradient(180deg, #1a2438 0%, #151e30 100%);
 }
 
 .cart-menu-header h2 {
@@ -202,10 +213,63 @@ body {
   font-size: 1rem;
 }
 
-.cart-empty-icon {
-  display: block;
-  font-size: 45px;
-  margin-bottom: 15px;
+.cart-menu-items {
+  padding: 16px;
+  max-height: calc(100vh - 320px);
+  overflow-y: auto;
+}
+
+.cart-prices {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+}
+
+.cart-original-price {
+  color: #94a3b8;
+  text-decoration: line-through;
+  font-size: 0.85rem;
+}
+
+.cart-final-price {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.cart-item-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0;
+}
+
+.cart-item-controls button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  background: #334155;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-item-total {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  color: #e2e8f0;
+}
+
+.cart-remove {
+  border: none;
+  background: transparent;
+  color: #ef4444;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 7px;
 }
 
 .cart-summary {
@@ -214,8 +278,7 @@ body {
   background-color: #182338;
 }
 
-.cart-subtotal,
-.cart-discount {
+.cart-summary-row {
   display: flex;
   justify-content: space-between;
   margin-bottom: 8px;
@@ -223,44 +286,37 @@ body {
   font-size: 0.95rem;
 }
 
-.cart-discount {
+.cart-discount-row {
   color: #4ade80;
-  margin-bottom: 12px;
 }
 
-.cart-total-header {
+.cart-summary-total {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding-top: 12px;
+  margin-top: 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   color: #ffffff;
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 1.05rem;
 }
 
-.cart-checkout {
+.checkout-btn {
   width: 100%;
   margin-top: 15px;
   padding: 12px 20px;
   border: none;
   border-radius: 8px;
-  background-color: #475569;
+  background: linear-gradient(135deg, #4f7ec8 0%, #355f9e 100%);
   color: #ffffff;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-.cart-checkout:hover {
-  background-color: #64748b;
-  transform: translateY(-2px);
+.checkout-btn:hover {
+  background: linear-gradient(135deg, #5a8ad4 0%, #3f6dae 100%);
 }
-
-/* =====================================================
-   MENÚ HAMBURGUESA Y DESPLEGABLE LATERAL
-   ===================================================== */
 
 .hamburger-button {
   background: none !important;
@@ -302,13 +358,14 @@ body {
   right: -320px;
   width: 320px;
   height: 100vh;
-  background-color: #1e293b;
-  box-shadow: -5px 0 25px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(180deg, #151e30 0%, #0e1524 100%);
+  box-shadow: -5px 0 25px rgba(0, 0, 0, 0.45);
   z-index: 2001;
   transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 2rem;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 .side-menu.menu-open {
@@ -344,6 +401,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .menu-links li {
@@ -377,17 +436,8 @@ body {
 }
 
 .menu-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  z-index: 2000;
+  display: none;
 }
-
-/* =====================================================
-   TARJETAS Y ELEMENTOS DE PRODUCTO
-   ===================================================== */
 
 .product-image-wrap {
   position: relative;
@@ -397,28 +447,37 @@ body {
   position: absolute;
   top: 12px;
   right: 12px;
-  width: 42px;
-  height: 42px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
   border: none;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.92);
+  color: #334155;
   cursor: pointer;
-  font-size: 1.2rem;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 5;
-  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .favorite-heart:hover {
-  transform: scale(1.1);
+  transform: scale(1.08);
   background: #ffffff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .favorite-heart.active {
   background: #ffffff;
+  color: #ef4444;
+}
+
+.favorite-heart.active svg {
+  fill: #ef4444;
+  stroke: #ef4444;
+}
+
+.favorite-heart svg {
+  display: block;
 }
 
 .discount-badge {
@@ -436,28 +495,42 @@ body {
 
 .product-actions {
   display: flex;
+  justify-content: flex-end;
   gap: 10px;
   width: 100%;
-  margin-top: 12px;
+  margin-top: 8px;
+  padding: 0 14px 14px;
 }
 
 .product-actions .product-button {
-  flex: 1;
+  flex: 0 0 auto;
 }
 
 .product-button-secondary {
-  background-color: #334155 !important;
-  color: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  background: linear-gradient(135deg, #24344f 0%, #1a263b 100%) !important;
+  color: #e8eef7 !important;
+  border: 1px solid rgba(130, 155, 190, 0.22) !important;
 }
 
 .product-button-secondary:hover {
-  background-color: #475569 !important;
+  background: linear-gradient(135deg, #2d4263 0%, #22324a 100%) !important;
 }
 
-/* =====================================================
-   SECCIÓN HERO / CARRUSEL
-   ===================================================== */
+.add-cart-button {
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 8px !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-cart-button svg {
+  display: block;
+}
 
 section {
   min-height: 100vh;
@@ -467,30 +540,46 @@ section {
 
 #hero,
 .advertisement-carousel {
-  position: relative; /* Mantener la posición absoluta de controles interna */
+  position: relative;
   padding: 0;
   width: 100%;
-  max-width: 1200px;
-  min-height: calc(100vh - 100px - 15vh);
-  height: calc(100vh - 100px - 15vh);
-  margin: 100px auto 5vh auto;
-  border-radius: 24px;
+  max-width: none;
+  min-height: 75vh;
+  height: 75vh;
+  margin: 0 0 5vh 0;
+  border-radius: 0;
   overflow: hidden;
   background-color: #1e293b;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  box-shadow: none;
 }
 
 .carousel-slide {
   position: relative;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 .carousel-image {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.carousel-slide::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    rgba(7, 11, 20, 0.88) 0%,
+    rgba(12, 18, 32, 0.55) 48%,
+    rgba(12, 18, 32, 0.22) 100%
+  );
+  z-index: 1;
 }
 
 .carousel-content {
@@ -498,8 +587,10 @@ section {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 2rem;
-  background: linear-gradient(transparent, rgba(11, 17, 32, 0.95));
+  z-index: 2;
+  max-width: none;
+  padding: 2.5rem 4rem;
+  background: none;
   color: #ffffff;
 }
 
@@ -581,23 +672,31 @@ section {
 }
 
 #favoritos,
-#contacto {
-  scroll-margin-top: 80px;
+#contacto,
+#catalogo {
+  scroll-margin-top: 12vh;
 }
-
-/* =====================================================
-   SECCIÓN FAVORITOS
-   ===================================================== */
 
 .favorites-section {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 6rem 2rem 4rem;
+  padding: 3rem 2rem 2.5rem;
+  min-height: auto;
+}
+
+.favorites-section.is-empty {
+  padding: 1.5rem 2rem 1rem;
+  min-height: auto;
 }
 
 .favorites-section h2 {
-  margin-bottom: 2rem;
+  margin-bottom: 1.25rem;
+}
+
+.favorites-section.is-empty h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.35rem;
 }
 
 .favorites-list {
@@ -665,16 +764,13 @@ section {
 }
 
 .empty-message {
-  padding: 25px;
-  text-align: center;
+  padding: 12px 16px;
+  text-align: left;
   opacity: 0.7;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  background: transparent;
+  font-size: 0.95rem;
 }
-
-/* =====================================================
-   FOOTER (ESTRUCTURA DE 4 COLUMNAS)
-   ===================================================== */
 
 hr {
   border: 0;
@@ -687,8 +783,8 @@ hr {
   grid-template-columns: repeat(4, 1fr);
   gap: 2rem;
   padding: 3.5rem 5rem;
-  background-color: #060a14;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, #0a101c 0%, #05080f 100%);
+  border-top: 1px solid rgba(130, 155, 190, 0.14);
   margin-top: 40px;
   width: 100%;
 }
@@ -746,10 +842,6 @@ hr {
 .social-img-icon:hover {
   transform: scale(1.15);
 }
-
-/* =====================================================
-   RESPONSIVE DESIGN
-   ===================================================== */
 
 @media (max-width: 900px) {
   .footer {
@@ -816,7 +908,8 @@ hr {
 
 @media (max-width: 480px) {
   .header-glass {
-    height: 70px;
+    height: 10vh;
+    min-height: 64px;
   }
 
   .logo {
@@ -835,10 +928,10 @@ hr {
   }
 
   .cart-menu {
-    top: 70px;
+    top: 10vh;
     right: 5px;
     width: calc(100% - 10px);
-    max-height: calc(100vh - 80px);
+    max-height: calc(100vh - 12vh);
   }
 
   .cart-menu-content {
@@ -882,8 +975,7 @@ hr {
   }
 
   .favorite-heart {
-    width: 38px;
-    height: 38px;
-    font-size: 1rem;
+    width: 34px;
+    height: 34px;
   }
 }

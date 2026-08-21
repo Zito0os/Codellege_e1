@@ -1,19 +1,20 @@
-export default function Compra({ product, onBack }) {
+export default function Resultados({ product, onBack, onBuy }) {
   if (!product) {
     return null;
   }
 
+  // lista features
   const features = [
-    'Iluminación RGB premium',
-    'Diseño ergonómico',
-    'Compatibilidad multi-device',
+    'Iluminacion RGB',
+    'Diseño comodo',
+    'Compatible con Windows',
   ];
 
   return (
     <main className="result-page">
       <div className="result-shell">
         <button className="back-button" onClick={onBack} type="button">
-          ← Volver a productos
+          Volver
         </button>
 
         <section className="result-layout">
@@ -24,16 +25,13 @@ export default function Compra({ product, onBack }) {
           </div>
 
           <div className="result-details">
-            <h1>
-                !Felicidades haz comprado{product.title}¡
-            </h1>
-            <span className="eyebrow">Teclado recomendado</span>
+            <span className="product-label">Detalle del teclado</span>
             <h1>{product.title}</h1>
-            <h1>${product.price}</h1>
+            <h1>${product.price.toFixed(2)}</h1>
 
             <div className="meta-row">
               <span className="meta-pill">Color: {product.color}</span>
-              <span className="meta-pill">Calificación: 4.9/5</span>
+              <span className="meta-pill">Switch: {product.tipo_switch}</span>
             </div>
 
             <p className="result-description">{product.description}</p>
@@ -45,11 +43,11 @@ export default function Compra({ product, onBack }) {
             </ul>
 
             <div className="action-row">
-              <button className="primary-action" type="button">
+              <button className="primary-action" type="button" onClick={onBuy}>
                 Comprar ahora
               </button>
               <button className="secondary-action" onClick={onBack} type="button">
-                Explorar más
+                Explorar mas
               </button>
             </div>
           </div>
