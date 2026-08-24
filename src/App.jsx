@@ -21,6 +21,7 @@ import pub2 from './assets/pub2.jpg';
 import pub3 from './assets/pub3.jpg';
 import Resultados from './Resultados';
 import Compra from './Compra_realizada';
+import MiPerfil from './MiPerfil';
 import log from './assets/log.PNG';
 import ter from './assets/ter.jpg';
 import arco from './assets/arco.jpg';
@@ -412,6 +413,19 @@ function Header({
               onClick={() => goToSection('favoritos')}
             >
               Favoritos ({favoritesCount})
+            </button>
+          </li>
+          <li>
+            <button
+              type="button"
+              className="menu-link"
+              onClick={() => {
+                setMenuOpen(false);
+                setCartOpen(false);
+                navigate('/perfil');
+              }}
+            >
+              Mi perfil
             </button>
           </li>
         </ul>
@@ -879,6 +893,7 @@ export default function App() {
       <Route path="/" element={<Catalog />} />
       <Route path="/producto/:productId" element={<ProductPage />} />
       <Route path="/compra/:productId" element={<CompraPage />} />
+      <Route path="/perfil" element={<MiPerfil />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
