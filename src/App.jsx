@@ -1038,13 +1038,14 @@ function Catalog() {
         id="personaliza"
         className={`favorites-section ${customOpen ? '' : 'is-empty'}`}
       >
+        <div className={`custom-panel ${customOpen ? 'is-open' : ''}`}>
         <button
           type="button"
           className={`custom-toggle ${customOpen ? 'is-open' : ''}`}
           onClick={() => setCustomOpen((current) => !current)}
         >
           <h2>Personaliza tu teclado</h2>
-          <span className="custom-toggle-arrow">v</span>
+          <span className="custom-toggle-arrow" aria-hidden="true"></span>
         </button>
 
         {customOpen && (
@@ -1207,6 +1208,7 @@ function Catalog() {
           </div>
         </div>
         )}
+        </div>
       </section>
 
       <hr />
