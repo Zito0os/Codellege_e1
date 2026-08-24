@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Navigate,
   Route,
@@ -25,6 +25,18 @@ import MiPerfil from './MiPerfil';
 import log from './assets/log.PNG';
 import ter from './assets/ter.jpg';
 import arco from './assets/arco.jpg';
+import switch1 from './assets/switch1.webp';
+import switch2 from './assets/switch2.webp';
+import switch3 from './assets/switch3.webp';
+import base1 from './assets/base1.webp';
+import base2 from './assets/base2.webp';
+import base3 from './assets/base3.jpg';
+import pcb1 from './assets/pcb1.webp';
+import pcb2 from './assets/pcb2.webp';
+import pcb3 from './assets/pcb3.jpg';
+import keycaps1 from './assets/keycaps1.webp';
+import keycaps2 from './assets/keycaps2.webp';
+import keycaps3 from './assets/keycaps3.png';
 import './App.css';
 
 // lista productos
@@ -111,6 +123,42 @@ const products = [
   },
 ];
 
+// opciones personalizar
+const basicColors = [
+  '#ef4444',
+  '#f97316',
+  '#eab308',
+  '#22c55e',
+  '#3b82f6',
+  '#a855f7',
+  '#ec4899',
+  '#f8fafc',
+];
+
+const switchOptions = [
+  { name: 'Rojo', price: 320, image: switch1 },
+  { name: 'Cafe', price: 340, image: switch2 },
+  { name: 'Azul', price: 350, image: switch3 },
+];
+
+const baseColorOptions = [
+  { name: 'Negra', price: 400, image: base1 },
+  { name: 'Blanca', price: 420, image: base2 },
+  { name: 'Custom', price: 450, image: base3, hasColors: true },
+];
+
+const pcbOptions = [
+  { name: 'Soldada', price: 480, image: pcb1 },
+  { name: 'HotSwap', price: 550, image: pcb2 },
+  { name: 'Wireless', price: 650, image: pcb3 },
+];
+
+const keycapOptions = [
+  { name: 'ABS', price: 280, image: keycaps1, hasColors: true },
+  { name: 'PBT', price: 450, image: keycaps2, hasColors: true },
+  { name: 'Resina', price: 980, image: keycaps3, hasColors: true },
+];
+
 // banners hero
 const advertisements = [
   {
@@ -141,19 +189,50 @@ function Header({
   favorites,
   removeFromCart,
   updateCartQuantity,
+  onOpenPersonaliza,
 }) {
   const navigate = useNavigate();
   // abrir cerrar carrito
   const [cartOpen, setCartOpen] = useState(false);
+  const cartMenuRef = useRef(null);
+  const cartButtonRef = useRef(null);
 
   const closeMenu = () => {
     setMenuOpen(false);
   };
 
+  // cerrar carrito al click afuera
+  useEffect(() => {
+    if (!cartOpen) {
+      return;
+    }
+
+    const handleClickOutside = (event) => {
+      if (
+        cartMenuRef.current?.contains(event.target) ||
+        cartButtonRef.current?.contains(event.target)
+      ) {
+        return;
+      }
+
+      setCartOpen(false);
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [cartOpen]);
+
   // ir a seccion
   const goToSection = (sectionId) => {
     setMenuOpen(false);
     setCartOpen(false);
+
+    if (sectionId === 'personaliza' && onOpenPersonaliza) {
+      onOpenPersonaliza();
+    }
 
     requestAnimationFrame(() => {
       const section = document.getElementById(sectionId);
@@ -177,6 +256,11 @@ function Header({
     let totalDiscount = 0;
 
     cart.forEach((item) => {
+      if (item.isCustom) {
+        subtotal += item.price * item.quantity;
+        return;
+      }
+
       const product = products.find((product) => product.id === item.id);
       if (!product) {
         return;
@@ -198,13 +282,26 @@ function Header({
 
   const cartTotals = calculateCart();
 
+  // volver al inicio
+  const goHome = () => {
+    setMenuOpen(false);
+    setCartOpen(false);
+    navigate('/');
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  };
+
   return (
     <header className="header-glass">
-      <div className="logo">Peri-Soft</div>
+      <button type="button" className="logo" onClick={goHome}>
+        Peri-Soft
+      </button>
 
       <button
         type="button"
         className="header-cart-button"
+        ref={cartButtonRef}
         onClick={() => setCartOpen((current) => !current)}
       >
         <svg
@@ -226,7 +323,7 @@ function Header({
       </button>
 
       {cartOpen && (
-        <div className="cart-menu">
+        <div className="cart-menu" ref={cartMenuRef}>
           <div className="cart-menu-header">
             <h2>Mi Carrito</h2>
             <button
@@ -247,6 +344,63 @@ function Header({
             <>
               <div className="cart-menu-items">
                 {cart.map((item) => {
+                  if (item.isCustom) {
+                    const itemTotal = item.price * item.quantity;
+
+                    return (
+                      <div className="cart-menu-item" key={item.id}>
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          className="cart-menu-item-image"
+                        />
+
+                        <div className="cart-menu-item-info">
+                          <h3>{item.title}</h3>
+                          <p className="cart-item-color">{item.parts}</p>
+
+                          <div className="cart-prices">
+                            <span className="cart-final-price">
+                              ${item.price.toFixed(2)}
+                            </span>
+                          </div>
+
+                          <div className="cart-item-controls">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                updateCartQuantity(item.id, item.quantity - 1)
+                              }
+                            >
+                              -
+                            </button>
+                            <span>{item.quantity}</span>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                updateCartQuantity(item.id, item.quantity + 1)
+                              }
+                            >
+                              +
+                            </button>
+                          </div>
+
+                          <p className="cart-item-total">
+                            Total: ${itemTotal.toFixed(2)}
+                          </p>
+                        </div>
+
+                        <button
+                          type="button"
+                          className="cart-remove"
+                          onClick={() => removeFromCart(item.id)}
+                        >
+                          X
+                        </button>
+                      </div>
+                    );
+                  }
+
                   const product = products.find(
                     (product) => product.id === item.id
                   );
@@ -388,6 +542,15 @@ function Header({
             <button
               type="button"
               className="menu-link"
+              onClick={() => goToSection('personaliza')}
+            >
+              Personaliza
+            </button>
+          </li>
+          <li>
+            <button
+              type="button"
+              className="menu-link"
               onClick={() => goToSection('contacto')}
             >
               Contacto
@@ -446,6 +609,14 @@ function Catalog() {
   const [cart, setCart] = useState([]);
   // guardado favoritos
   const [favorites, setFavorites] = useState([]);
+  // personalizar teclado
+  const [selectedSwitch, setSelectedSwitch] = useState(null);
+  const [selectedBase, setSelectedBase] = useState(null);
+  const [selectedBaseColor, setSelectedBaseColor] = useState(null);
+  const [selectedPcb, setSelectedPcb] = useState(null);
+  const [selectedKeycaps, setSelectedKeycaps] = useState(null);
+  const [selectedKeycapColor, setSelectedKeycapColor] = useState(null);
+  const [customOpen, setCustomOpen] = useState(false);
 
   // mover carrusel
   useEffect(() => {
@@ -544,6 +715,87 @@ function Catalog() {
     );
   };
 
+  const getOptionPrice = (options, selectedName) => {
+    const option = options.find((item) => item.name === selectedName);
+    return option ? option.price : 0;
+  };
+
+  const customParts = [];
+
+  if (selectedSwitch) {
+    customParts.push({
+      label: 'Switch',
+      name: selectedSwitch,
+      price: getOptionPrice(switchOptions, selectedSwitch),
+    });
+  }
+
+  if (selectedBase) {
+    const baseName =
+      selectedBase === 'Custom' && selectedBaseColor
+        ? `Custom (${selectedBaseColor})`
+        : selectedBase;
+
+    customParts.push({
+      label: 'Base',
+      name: baseName,
+      price: getOptionPrice(baseColorOptions, selectedBase),
+    });
+  }
+
+  if (selectedPcb) {
+    customParts.push({
+      label: 'PCB',
+      name: selectedPcb,
+      price: getOptionPrice(pcbOptions, selectedPcb),
+    });
+  }
+
+  if (selectedKeycaps) {
+    const keycapName = selectedKeycapColor
+      ? `${selectedKeycaps} (${selectedKeycapColor})`
+      : selectedKeycaps;
+
+    customParts.push({
+      label: 'Keycaps',
+      name: keycapName,
+      price: getOptionPrice(keycapOptions, selectedKeycaps),
+    });
+  }
+
+  const customTotal = customParts.reduce((sum, part) => sum + part.price, 0);
+  const customReady =
+    selectedSwitch &&
+    selectedBase &&
+    (selectedBase !== 'Custom' || selectedBaseColor) &&
+    selectedPcb &&
+    selectedKeycaps &&
+    selectedKeycapColor;
+
+  // agregar personalizado al carrito
+  const handleAddCustomToCart = () => {
+    if (!customReady) {
+      return;
+    }
+
+    const partsText = customParts
+      .map((part) => `${part.label}: ${part.name}`)
+      .join(' | ');
+
+    setCart((currentCart) => [
+      ...currentCart,
+      {
+        id: `custom-${Date.now()}`,
+        quantity: 1,
+        isCustom: true,
+        title: 'Teclado personalizado',
+        price: customTotal,
+        parts: partsText,
+        image: arco,
+      },
+    ]);
+  };
+
   return (
     <main className="catalog-page">
       <Header
@@ -553,6 +805,7 @@ function Catalog() {
         favorites={favorites}
         removeFromCart={removeFromCart}
         updateCartQuantity={updateCartQuantity}
+        onOpenPersonaliza={() => setCustomOpen(true)}
       />
 
       <section id="hero" className="advertisement-carousel">
@@ -747,6 +1000,27 @@ function Catalog() {
                   </div>
                   <button
                     type="button"
+                    className="product-button product-button-secondary add-cart-button"
+                    onClick={() => handleAddToCart(favId)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="8" cy="21" r="1" />
+                      <circle cx="19" cy="21" r="1" />
+                      <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
                     className="remove-btn"
                     onClick={() => removeFromFavorites(favId)}
                   >
@@ -756,6 +1030,181 @@ function Catalog() {
               );
             })}
           </div>
+        )}
+      </section>
+
+      <section
+        id="personaliza"
+        className={`favorites-section ${customOpen ? '' : 'is-empty'}`}
+      >
+        <button
+          type="button"
+          className={`custom-toggle ${customOpen ? 'is-open' : ''}`}
+          onClick={() => setCustomOpen((current) => !current)}
+        >
+          <h2>Personaliza tu teclado</h2>
+          <span className="custom-toggle-arrow">v</span>
+        </button>
+
+        {customOpen && (
+        <div className="custom-layout">
+          <div className="custom-options">
+            <h3>Switches</h3>
+            <div className="custom-option-grid">
+              {switchOptions.map((option) => (
+                <button
+                  type="button"
+                  key={option.name}
+                  className={`custom-option-card ${
+                    selectedSwitch === option.name ? 'is-selected' : ''
+                  }`}
+                  onClick={() => setSelectedSwitch(option.name)}
+                >
+                  <img
+                    src={option.image}
+                    alt={option.name}
+                    className="custom-option-image"
+                  />
+                  <h4>{option.name}</h4>
+                  <p className="item-price">${option.price.toFixed(2)}</p>
+                </button>
+              ))}
+            </div>
+
+            <h3>Base</h3>
+            <div className="custom-option-grid">
+              {baseColorOptions.map((option) => (
+                <button
+                  type="button"
+                  key={option.name}
+                  className={`custom-option-card ${
+                    selectedBase === option.name ? 'is-selected' : ''
+                  }`}
+                  onClick={() => {
+                    setSelectedBase(option.name);
+                    if (option.name !== 'Custom') {
+                      setSelectedBaseColor(null);
+                    }
+                  }}
+                >
+                  <img
+                    src={option.image}
+                    alt={option.name}
+                    className="custom-option-image"
+                  />
+                  <h4>{option.name}</h4>
+                  <p className="item-price">${option.price.toFixed(2)}</p>
+                </button>
+              ))}
+            </div>
+
+            {selectedBase === 'Custom' && (
+              <div className="color-picker">
+                {basicColors.map((color) => (
+                  <button
+                    type="button"
+                    key={color}
+                    className={`color-swatch ${
+                      selectedBaseColor === color ? 'is-selected' : ''
+                    }`}
+                    style={{ backgroundColor: color }}
+                    onClick={() => setSelectedBaseColor(color)}
+                  />
+                ))}
+              </div>
+            )}
+
+            <h3>PCB</h3>
+            <div className="custom-option-grid">
+              {pcbOptions.map((option) => (
+                <button
+                  type="button"
+                  key={option.name}
+                  className={`custom-option-card ${
+                    selectedPcb === option.name ? 'is-selected' : ''
+                  }`}
+                  onClick={() => setSelectedPcb(option.name)}
+                >
+                  <img
+                    src={option.image}
+                    alt={option.name}
+                    className="custom-option-image"
+                  />
+                  <h4>{option.name}</h4>
+                  <p className="item-price">${option.price.toFixed(2)}</p>
+                </button>
+              ))}
+            </div>
+
+            <h3>Keycaps</h3>
+            <div className="custom-option-grid">
+              {keycapOptions.map((option) => (
+                <button
+                  type="button"
+                  key={option.name}
+                  className={`custom-option-card ${
+                    selectedKeycaps === option.name ? 'is-selected' : ''
+                  }`}
+                  onClick={() => setSelectedKeycaps(option.name)}
+                >
+                  <img
+                    src={option.image}
+                    alt={option.name}
+                    className="custom-option-image"
+                  />
+                  <h4>{option.name}</h4>
+                  <p className="item-price">${option.price.toFixed(2)}</p>
+                </button>
+              ))}
+            </div>
+
+            {selectedKeycaps && (
+              <div className="color-picker">
+                {basicColors.map((color) => (
+                  <button
+                    type="button"
+                    key={color}
+                    className={`color-swatch ${
+                      selectedKeycapColor === color ? 'is-selected' : ''
+                    }`}
+                    style={{ backgroundColor: color }}
+                    onClick={() => setSelectedKeycapColor(color)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="custom-summary">
+            <h3>Tu seleccion</h3>
+
+            {customParts.length === 0 ? (
+              <p className="empty-message">Elige una opcion de cada categoria.</p>
+            ) : (
+              <div className="custom-parts-list">
+                {customParts.map((part) => (
+                  <div key={part.label} className="custom-part-item">
+                    <span>{part.label}:</span>
+                    <span>
+                      {part.name} - ${part.price.toFixed(2)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <p className="item-price">Cotizacion: ${customTotal.toFixed(2)}</p>
+
+            <button
+              type="button"
+              className="product-button"
+              onClick={handleAddCustomToCart}
+              disabled={!customReady}
+            >
+              Agregar al carrito
+            </button>
+          </div>
+        </div>
         )}
       </section>
 

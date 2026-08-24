@@ -22,7 +22,13 @@ export default function MiPerfil() {
   return (
     <main className="profile-page">
       <header className="header-glass">
-        <div className="logo">Peri-Soft</div>
+        <button
+          type="button"
+          className="logo"
+          onClick={() => navigate('/')}
+        >
+          Peri-Soft
+        </button>
 
         <button
           type="button"
