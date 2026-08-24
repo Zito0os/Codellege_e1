@@ -3,6 +3,7 @@ import {
   Navigate,
   Route,
   Routes,
+  useLocation,
   useNavigate,
   useParams,
 } from 'react-router-dom';
@@ -1318,6 +1319,7 @@ function ProductPage() {
 
 // pagina compra
 function CompraPage() {
+  const location = useLocation();
   const navigate = useNavigate();
   const { productId } = useParams();
 
@@ -1330,6 +1332,7 @@ function CompraPage() {
   return (
     <Compra
       product={product}
+      purchaseKey={location.key}
       onBack={() => navigate('/')}
     />
   );

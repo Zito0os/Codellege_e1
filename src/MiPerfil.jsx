@@ -26,17 +26,16 @@ export default function MiPerfil() {
       {/* HEADER */}
       <header className="header-glass">
 
-        <div className="logo">
-          Peri-Soft
-        </div>
-
         <button
           type="button"
-          className="profile-back-button"
+          className="logo"
           onClick={() => navigate('/')}
         >
-          Volver
+          Peri-Soft
+
         </button>
+
+        
 
       </header>
 
