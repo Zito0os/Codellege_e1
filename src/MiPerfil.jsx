@@ -1,38 +1,34 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import './App.css';
 import './Perfil.css';
 import perfil from './assets/perfil.jpg';
 
-const orders = [
-  {
-    id: 'PS-1001',
-    date: '20 de agosto de 2026',
-    time: '14:35',
-    status: 'Entregado',
-    total: '$899.00',
-    payment: 'Tarjeta de crédito',
-    products: 'Teclado mecánico Redragon',
-  },
-  {
-    id: 'PS-1002',
-    date: '22 de agosto de 2026',
-    time: '18:20',
-    status: 'En preparación',
-    total: '$1,899.00',
-    payment: 'Tarjeta de débito',
-    products: 'Teclado Razer + Mouse Logitech',
-  },
-];
-
-
 export default function MiPerfil() {
   const navigate = useNavigate();
+
+  // Estado donde se guardarán los pedidos
+  const [orders, setOrders] = useState([]);
+
+  // Obtener los pedidos guardados
+  useEffect(() => {
+    const savedOrders = JSON.parse(
+      localStorage.getItem('orders')
+    ) || [];
+
+    setOrders(savedOrders);
+  }, []);
 
   return (
     <main className="profile-page">
 
+      {/* HEADER */}
       <header className="header-glass">
-        <div className="logo">Peri-Soft</div>
+
+        <div className="logo">
+          Peri-Soft
+        </div>
 
         <button
           type="button"
@@ -41,160 +37,244 @@ export default function MiPerfil() {
         >
           Volver
         </button>
+
       </header>
+
 
       <section className="profile-container">
 
-        {/* PERFIL */}
+        {/* =========================
+            PERFIL
+        ========================== */}
+
         <div className="profile-card">
 
           <div className="profile-image-container">
+
             <img
               src={perfil}
               alt="Imagen de perfil"
               className="profile-image"
             />
+
           </div>
 
-          <h1>Mi perfil</h1>
+          <h1>
+            Mi perfil
+          </h1>
 
           <div className="profile-user-info">
-            <h2>Zito_os</h2>
-            
+
+            <h2>
+              Zito_os
+            </h2>
+
           </div>
 
         </div>
-        {/* PEDIDOS Y COMPRAS */}
+
+
+        {/* =========================
+            PEDIDOS Y COMPRAS
+        ========================== */}
+
         <div className="orders-sections">
 
-          {/* MIS PEDIDOS */}
+
+          {/* =========================
+              MIS PEDIDOS
+          ========================== */}
+
           <div className="orders-card">
 
-            <h2>Mis pedidos</h2>
+            <h2>
+              Mis pedidos
+            </h2>
 
             <div className="orders-list">
 
-              {orders
-                .filter((order) => order.status !== 'Entregado')
-                .map((order) => (
+              {orders.filter(
+                (order) => order.status !== 'Entregado'
+              ).length === 0 ? (
 
-                  <article
-                    className="order-item"
-                    key={order.id}
-                  >
+                <p className="no-orders">
+                  No tienes pedidos en camino.
+                </p>
 
-                    <div className="order-main-info">
+              ) : (
 
-                      <h3>
-                        Pedido #{order.id}
-                      </h3>
+                orders
+                  .filter(
+                    (order) => order.status !== 'Entregado'
+                  )
+                  .map((order) => (
 
-                      <p>
-                        <strong>Fecha:</strong> {order.date}
-                      </p>
+                    <article
+                      className="order-item"
+                      key={order.id}
+                    >
 
-                      <p>
-                        <strong>Hora:</strong> {order.time}
-                      </p>
+                      <div className="order-main-info">
 
-                      <p>
-                        <strong>Productos:</strong> {order.products}
-                      </p>
+                        <h3>
+                          Pedido #{order.id}
+                        </h3>
 
-                      <p>
-                        <strong>Método de pago:</strong>{' '}
-                        {order.payment}
-                      </p>
+                        <p>
+                          <strong>
+                            Fecha:
+                          </strong>{' '}
+                          {order.date}
+                        </p>
 
-                    </div>
+                        <p>
+                          <strong>
+                            Hora:
+                          </strong>{' '}
+                          {order.time}
+                        </p>
 
-                    <div className="order-secondary-info">
+                        <p>
+                          <strong>
+                            Productos:
+                          </strong>{' '}
+                          {order.products}
+                        </p>
 
-                      <p className="order-status">
-                        {order.status}
-                      </p>
+                        <p>
+                          <strong>
+                            Método de pago:
+                          </strong>{' '}
+                          {order.payment}
+                        </p>
 
-                      <strong className="order-total">
-                        {order.total}
-                      </strong>
+                      </div>
 
-                    </div>
 
-                  </article>
+                      <div className="order-secondary-info">
 
-                ))}
+                        <p className="order-status">
+                          {order.status}
+                        </p>
+
+                        <strong className="order-total">
+                          {order.total}
+                        </strong>
+
+                      </div>
+
+                    </article>
+
+                  ))
+
+              )}
 
             </div>
 
           </div>
 
 
-          {/* MIS COMPRAS */}
+          {/* =========================
+              MIS COMPRAS
+          ========================== */}
+
           <div className="orders-card">
 
-            <h2>Mis compras</h2>
+            <h2>
+              Mis compras
+            </h2>
 
             <div className="orders-list">
 
-              {orders
-                .filter((order) => order.status === 'Entregado')
-                .map((order) => (
+              {orders.filter(
+                (order) => order.status === 'Entregado'
+              ).length === 0 ? (
 
-                  <article
-                    className="order-item"
-                    key={order.id}
-                  >
+                <p className="no-orders">
+                  Aún no tienes compras realizadas.
+                </p>
 
-                    <div className="order-main-info">
+              ) : (
 
-                      <h3>
-                        Compra #{order.id}
-                      </h3>
+                orders
+                  .filter(
+                    (order) => order.status === 'Entregado'
+                  )
+                  .map((order) => (
 
-                      <p>
-                        <strong>Fecha:</strong> {order.date}
-                      </p>
+                    <article
+                      className="order-item"
+                      key={order.id}
+                    >
 
-                      <p>
-                        <strong>Hora:</strong> {order.time}
-                      </p>
+                      <div className="order-main-info">
 
-                      <p>
-                        <strong>Productos:</strong> {order.products}
-                      </p>
+                        <h3>
+                          Compra #{order.id}
+                        </h3>
 
-                      <p>
-                        <strong>Método de pago:</strong>{' '}
-                        {order.payment}
-                      </p>
+                        <p>
+                          <strong>
+                            Fecha:
+                          </strong>{' '}
+                          {order.date}
+                        </p>
 
-                    </div>
+                        <p>
+                          <strong>
+                            Hora:
+                          </strong>{' '}
+                          {order.time}
+                        </p>
 
-                    <div className="order-secondary-info">
+                        <p>
+                          <strong>
+                            Productos:
+                          </strong>{' '}
+                          {order.products}
+                        </p>
 
-                      <p className="order-status">
-                        {order.status}
-                      </p>
+                        <p>
+                          <strong>
+                            Método de pago:
+                          </strong>{' '}
+                          {order.payment}
+                        </p>
 
-                      <strong className="order-total">
-                        {order.total}
-                      </strong>
+                      </div>
 
-                    </div>
 
-                  </article>
+                      <div className="order-secondary-info">
 
-                ))}
+                        <p className="order-status">
+                          {order.status}
+                        </p>
+
+                        <strong className="order-total">
+                          {order.total}
+                        </strong>
+
+                      </div>
+
+                    </article>
+
+                  ))
+
+              )}
 
             </div>
 
           </div>
 
         </div>
-        
 
-        
+
+        {/* =========================
+            CERRAR SESIÓN
+        ========================== */}
+
         <div className="logout-container">
+
           <button
             type="button"
             className="logout-button"
@@ -202,6 +282,7 @@ export default function MiPerfil() {
           >
             Cerrar sesión
           </button>
+
         </div>
 
       </section>

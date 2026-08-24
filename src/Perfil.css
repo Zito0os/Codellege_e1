@@ -32,7 +32,7 @@
   height: 150px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid var(--accent);
+  border: 3px white solid;
 }
 
 .profile-card h1 {
@@ -155,7 +155,7 @@
 }
 
 .orders-card {
-  width: 100%;
+  width: 100%;  
   padding: 30px;
   border-radius: 20px;
   box-sizing: border-box;
