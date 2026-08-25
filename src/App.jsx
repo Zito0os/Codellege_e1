@@ -22,6 +22,7 @@ import pub2 from './assets/pub2.jpg';
 import pub3 from './assets/pub3.jpg';
 import Resultados from './Resultados';
 import Compra from './Compra_realizada';
+import CompraCarrito from './CompraCarrito';
 import MiPerfil from './MiPerfil';
 import log from './assets/log.PNG';
 import ter from './assets/ter.jpg';
@@ -191,6 +192,7 @@ function Header({
   removeFromCart,
   updateCartQuantity,
   onOpenPersonaliza,
+  onCheckout,
 }) {
   const navigate = useNavigate();
   // abrir cerrar carrito
@@ -500,7 +502,11 @@ function Header({
                   <strong>${cartTotals.total.toFixed(2)}</strong>
                 </div>
 
-                <button type="button" className="checkout-btn">
+                <button
+                  type="button"
+                  className="checkout-btn"
+                  onClick={onCheckout}
+                >
                   Ir al Pago
                 </button>
               </div>
@@ -811,6 +817,11 @@ function Catalog() {
         removeFromCart={removeFromCart}
         updateCartQuantity={updateCartQuantity}
         onOpenPersonaliza={() => setCustomOpen(true)}
+        onCheckout={() => {
+          if (cart.length > 0) {
+            navigate('/compra-carrito', { state: { cart } });
+          }
+        }}
       />
 
       <section id="hero" className="advertisement-carousel">
@@ -1380,6 +1391,7 @@ export default function App() {
       <Route path="/" element={<Catalog />} />
       <Route path="/producto/:productId" element={<ProductPage />} />
       <Route path="/compra/:productId" element={<CompraPage />} />
+      <Route path="/compra-carrito" element={<CompraCarrito />} />
       <Route path="/perfil" element={<MiPerfil />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
