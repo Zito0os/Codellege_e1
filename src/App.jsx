@@ -183,6 +183,141 @@ const advertisements = [
   },
 ];
 
+// Modal para Registro e Inicio de Sesion
+function AuthModal({ isOpen, onClose }) {
+  const [isRegister, setIsRegister] = useState(true);
+  const [formData, setFormData] = useState({
+    nombre: '',
+    email: '',
+    password: '',
+  });
+  const [mensaje, setMensaje] = useState('');
+  const [error, setError] = useState('');
+
+  if (!isOpen) return null;
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMensaje('');
+    setError('');
+
+    const endpoint = isRegister ? '/api/registro' : '/api/login';
+
+    const payload = isRegister
+      ? { nombre: formData.nombre, email: formData.email, password: formData.password }
+      : { email: formData.email, password: formData.password };
+
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const text = await res.text();
+      let data = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch (parseErr) {
+        throw new Error('Respuesta no válida del servidor');
+      }
+
+      if (!res.ok) {
+        throw new Error(data.error || `Error ${res.status}: Ocurrió un error en el servidor`);
+      }
+
+      setMensaje(data.mensaje || 'Operación realizada con éxito');
+      setFormData({ nombre: '', email: '', password: '' });
+      if (!isRegister && data.usuario) {
+        localStorage.setItem('usuario', JSON.stringify(data.usuario));
+      }
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  return (
+    <div className="auth-modal-overlay">
+      <div className="auth-modal-content">
+        <button type="button" className="auth-modal-close" onClick={onClose}>
+          ✕
+        </button>
+
+        <h2>{isRegister ? 'Crear Cuenta' : 'Iniciar Sesión'}</h2>
+
+        {mensaje && <p className="auth-msg success">{mensaje}</p>}
+        {error && <p className="auth-msg error">{error}</p>}
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          {isRegister && (
+            <div className="auth-field">
+              <label>Nombre Completo:</label>
+              <input
+                type="text"
+                name="nombre"
+                value={formData.nombre}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          )}
+
+          <div className="auth-field">
+            <label>Correo Electrónico:</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="auth-field">
+            <label>Contraseña:</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <button type="submit" className="auth-submit-btn">
+            {isRegister ? 'Registrarse' : 'Ingresar'}
+          </button>
+        </form>
+
+        <p className="auth-toggle-text">
+          {isRegister ? '¿Ya tienes una cuenta?' : '¿Aún no tienes cuenta?'}
+          <button
+            type="button"
+            className="auth-toggle-btn"
+            onClick={() => {
+              setIsRegister(!isRegister);
+              setMensaje('');
+              setError('');
+            }}
+          >
+            {isRegister ? ' Inicia sesión' : ' Regístrate'}
+          </button>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+
 // header pagina
 function Header({
   menuOpen,
@@ -197,6 +332,7 @@ function Header({
   const navigate = useNavigate();
   // abrir cerrar carrito
   const [cartOpen, setCartOpen] = useState(false);
+  const [authOpen, setauthOpen] = useState(false);
   const cartMenuRef = useRef(null);
   const cartButtonRef = useRef(null);
 
@@ -296,6 +432,7 @@ function Header({
   };
 
   return (
+    <>
     <header className="header-glass">
       <button type="button" className="logo" onClick={goHome}>
         Peri-Soft
@@ -602,9 +739,26 @@ function Header({
               Mi perfil
             </button>
           </li>
+          <li>
+            <button
+                type="button"
+                className="menu-link"
+                onClick={() => {
+                  setMenuOpen(false);
+                  setCartOpen(false);
+                  setAuthOpen(true);
+                }}
+              >
+                Registro / Login
+            </button>
+          </li>
         </ul>
       </nav>
     </header>
+    <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
+  </>
+    
+  
   );
 }
 
