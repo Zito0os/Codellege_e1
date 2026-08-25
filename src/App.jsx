@@ -133,6 +133,140 @@ const advertisements = [
   },
 ];
 
+// Modal para Registro e Inicio de Sesion
+function AuthModal({ isOpen, onClose }) {
+  const [isRegister, setIsRegister] = useState(true);
+  const [formData, setFormData] = useState({
+    nombre: '',
+    email: '',
+    password: '',
+  });
+  const [mensaje, setMensaje] = useState('');
+  const [error, setError] = useState('');
+
+  if (!isOpen) return null;
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMensaje('');
+    setError('');
+
+    const endpoint = isRegister ? '/api/registro' : '/api/login';
+
+    const payload = isRegister
+      ? { nombre: formData.nombre, email: formData.email, password: formData.password }
+      : { email: formData.email, password: formData.password };
+
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const text = await res.text();
+      let data = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch (parseErr) {
+        throw new Error('Respuesta no válida del servidor');
+      }
+
+      if (!res.ok) {
+        throw new Error(data.error || `Error ${res.status}: Ocurrió un error en el servidor`);
+      }
+
+      setMensaje(data.mensaje || 'Operación realizada con éxito');
+      setFormData({ nombre: '', email: '', password: '' });
+      if (!isRegister && data.usuario) {
+        localStorage.setItem('usuario', JSON.stringify(data.usuario));
+      }
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  return (
+    <div className="auth-modal-overlay">
+      <div className="auth-modal-content">
+        <button type="button" className="auth-modal-close" onClick={onClose}>
+          ✕
+        </button>
+
+        <h2>{isRegister ? 'Crear Cuenta' : 'Iniciar Sesión'}</h2>
+
+        {mensaje && <p className="auth-msg success">{mensaje}</p>}
+        {error && <p className="auth-msg error">{error}</p>}
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          {isRegister && (
+            <div className="auth-field">
+              <label>Nombre Completo:</label>
+              <input
+                type="text"
+                name="nombre"
+                value={formData.nombre}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          )}
+
+          <div className="auth-field">
+            <label>Correo Electrónico:</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="auth-field">
+            <label>Contraseña:</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <button type="submit" className="auth-submit-btn">
+            {isRegister ? 'Registrarse' : 'Ingresar'}
+          </button>
+        </form>
+
+        <p className="auth-toggle-text">
+          {isRegister ? '¿Ya tienes una cuenta?' : '¿Aún no tienes cuenta?'}
+          <button
+            type="button"
+            className="auth-toggle-btn"
+            onClick={() => {
+              setIsRegister(!isRegister);
+              setMensaje('');
+              setError('');
+            }}
+          >
+            {isRegister ? ' Inicia sesión' : ' Regístrate'}
+          </button>
+        </p>
+      </div>
+    </div>
+  );
+}
+
 // header pagina
 function Header({
   menuOpen,
@@ -145,6 +279,7 @@ function Header({
   const navigate = useNavigate();
   // abrir cerrar carrito
   const [cartOpen, setCartOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
 
   const closeMenu = () => {
     setMenuOpen(false);
@@ -199,238 +334,255 @@ function Header({
   const cartTotals = calculateCart();
 
   return (
-    <header className="header-glass">
-      <div className="logo">Peri-Soft</div>
+    <>
+      <header className="header-glass">
+        <div className="logo">Peri-Soft</div>
 
-      <button
-        type="button"
-        className="header-cart-button"
-        onClick={() => setCartOpen((current) => !current)}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="22"
-          height="22"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+        <button
+          type="button"
+          className="header-cart-button"
+          onClick={() => setCartOpen((current) => !current)}
         >
-          <circle cx="8" cy="21" r="1" />
-          <circle cx="19" cy="21" r="1" />
-          <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
-        </svg>
-        <span>({cartCount})</span>
-      </button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="8" cy="21" r="1" />
+            <circle cx="19" cy="21" r="1" />
+            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+          </svg>
+          <span>({cartCount})</span>
+        </button>
 
-      {cartOpen && (
-        <div className="cart-menu">
-          <div className="cart-menu-header">
-            <h2>Mi Carrito</h2>
-            <button
-              type="button"
-              className="cart-close"
-              onClick={() => setCartOpen(false)}
-            >
-              X
-            </button>
-          </div>
-
-          {cart.length === 0 ? (
-            <div className="cart-empty">
-              <h3>Tu carrito esta vacio</h3>
-              <p>Agrega productos desde el catalogo.</p>
+        {cartOpen && (
+          <div className="cart-menu">
+            <div className="cart-menu-header">
+              <h2>Mi Carrito</h2>
+              <button
+                type="button"
+                className="cart-close"
+                onClick={() => setCartOpen(false)}
+              >
+                X
+              </button>
             </div>
-          ) : (
-            <>
-              <div className="cart-menu-items">
-                {cart.map((item) => {
-                  const product = products.find(
-                    (product) => product.id === item.id
-                  );
 
-                  if (!product) {
-                    return null;
-                  }
+            {cart.length === 0 ? (
+              <div className="cart-empty">
+                <h3>Tu carrito esta vacio</h3>
+                <p>Agrega productos desde el catalogo.</p>
+              </div>
+            ) : (
+              <>
+                <div className="cart-menu-items">
+                  {cart.map((item) => {
+                    const product = products.find(
+                      (product) => product.id === item.id
+                    );
 
-                  const discount = (product.price * product.descuento) / 100;
-                  const finalPrice = product.price - discount;
-                  const itemTotal = finalPrice * item.quantity;
+                    if (!product) {
+                      return null;
+                    }
 
-                  return (
-                    <div className="cart-menu-item" key={item.id}>
-                      <img
-                        src={product.image}
-                        alt={product.title}
-                        className="cart-menu-item-image"
-                      />
+                    const discount = (product.price * product.descuento) / 100;
+                    const finalPrice = product.price - discount;
+                    const itemTotal = finalPrice * item.quantity;
 
-                      <div className="cart-menu-item-info">
-                        <h3>{product.title}</h3>
-                        <p className="cart-item-color">{product.color}</p>
+                    return (
+                      <div className="cart-menu-item" key={item.id}>
+                        <img
+                          src={product.image}
+                          alt={product.title}
+                          className="cart-menu-item-image"
+                        />
 
-                        {product.descuento > 0 && (
-                          <span className="cart-discount">
-                            -{product.descuento}%
-                          </span>
-                        )}
+                        <div className="cart-menu-item-info">
+                          <h3>{product.title}</h3>
+                          <p className="cart-item-color">{product.color}</p>
 
-                        <div className="cart-prices">
                           {product.descuento > 0 && (
-                            <span className="cart-original-price">
-                              ${product.price.toFixed(2)}
+                            <span className="cart-discount">
+                              -{product.descuento}%
                             </span>
                           )}
-                          <span className="cart-final-price">
-                            ${finalPrice.toFixed(2)}
-                          </span>
+
+                          <div className="cart-prices">
+                            {product.descuento > 0 && (
+                              <span className="cart-original-price">
+                                ${product.price.toFixed(2)}
+                              </span>
+                            )}
+                            <span className="cart-final-price">
+                              ${finalPrice.toFixed(2)}
+                            </span>
+                          </div>
+
+                          <div className="cart-item-controls">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                updateCartQuantity(item.id, item.quantity - 1)
+                              }
+                            >
+                              -
+                            </button>
+                            <span>{item.quantity}</span>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                updateCartQuantity(item.id, item.quantity + 1)
+                              }
+                            >
+                              +
+                            </button>
+                          </div>
+
+                          <p className="cart-item-total">
+                            Total: ${itemTotal.toFixed(2)}
+                          </p>
                         </div>
 
-                        <div className="cart-item-controls">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              updateCartQuantity(item.id, item.quantity - 1)
-                            }
-                          >
-                            -
-                          </button>
-                          <span>{item.quantity}</span>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              updateCartQuantity(item.id, item.quantity + 1)
-                            }
-                          >
-                            +
-                          </button>
-                        </div>
-
-                        <p className="cart-item-total">
-                          Total: ${itemTotal.toFixed(2)}
-                        </p>
+                        <button
+                          type="button"
+                          className="cart-remove"
+                          onClick={() => removeFromCart(item.id)}
+                        >
+                          X
+                        </button>
                       </div>
-
-                      <button
-                        type="button"
-                        className="cart-remove"
-                        onClick={() => removeFromCart(item.id)}
-                      >
-                        X
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="cart-summary">
-                <div className="cart-summary-row">
-                  <span>Subtotal:</span>
-                  <span>${cartTotals.subtotal.toFixed(2)}</span>
+                    );
+                  })}
                 </div>
 
-                <div className="cart-summary-row cart-discount-row">
-                  <span>Descuento:</span>
-                  <span>-${cartTotals.totalDiscount.toFixed(2)}</span>
+                <div className="cart-summary">
+                  <div className="cart-summary-row">
+                    <span>Subtotal:</span>
+                    <span>${cartTotals.subtotal.toFixed(2)}</span>
+                  </div>
+
+                  <div className="cart-summary-row cart-discount-row">
+                    <span>Descuento:</span>
+                    <span>-${cartTotals.totalDiscount.toFixed(2)}</span>
+                  </div>
+
+                  <div className="cart-summary-total">
+                    <strong>Total a pagar:</strong>
+                    <strong>${cartTotals.total.toFixed(2)}</strong>
+                  </div>
+
+                  <button type="button" className="checkout-btn">
+                    Ir al Pago
+                  </button>
                 </div>
+              </>
+            )}
+          </div>
+        )}
 
-                <div className="cart-summary-total">
-                  <strong>Total a pagar:</strong>
-                  <strong>${cartTotals.total.toFixed(2)}</strong>
-                </div>
+        <button
+          type="button"
+          className={`hamburger-button ${menuOpen ? 'is-active' : ''}`}
+          onClick={() => setMenuOpen((current) => !current)}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
 
-                <button type="button" className="checkout-btn">
-                  Ir al Pago
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-      )}
+        <nav className={`side-menu ${menuOpen ? 'menu-open' : ''}`}>
+          <div className="menu-header">
+            <h2>Menu</h2>
+          </div>
 
-      <button
-        type="button"
-        className={`hamburger-button ${menuOpen ? 'is-active' : ''}`}
-        onClick={() => setMenuOpen((current) => !current)}
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+          <ul className="menu-links">
+            <li>
+              <button
+                type="button"
+                className="menu-link"
+                onClick={() => goToSection('hero')}
+              >
+                Novedades
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                className="menu-link"
+                onClick={() => goToSection('catalogo')}
+              >
+                Catalogo
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                className="menu-link"
+                onClick={() => goToSection('contacto')}
+              >
+                Contacto
+              </button>
+            </li>
+            <li className="menu-divider"></li>
+            <li>
+              <button
+                type="button"
+                className="menu-link"
+                onClick={() => {
+                  setMenuOpen(false);
+                  setCartOpen(true);
+                }}
+              >
+                Carrito ({cartCount})
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                className="menu-link"
+                onClick={() => goToSection('favoritos')}
+              >
+                Favoritos ({favoritesCount})
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                className="menu-link"
+                onClick={() => {
+                  setMenuOpen(false);
+                  setCartOpen(false);
+                  setAuthOpen(true);
+                }}
+              >
+                Registro / Login
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                className="menu-link"
+                onClick={() => {
+                  setMenuOpen(false);
+                  setCartOpen(false);
+                  navigate('/perfil');
+                }}
+              >
+                Mi perfil
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </header>
 
-      <nav className={`side-menu ${menuOpen ? 'menu-open' : ''}`}>
-        <div className="menu-header">
-          <h2>Menu</h2>
-        </div>
-
-        <ul className="menu-links">
-          <li>
-            <button
-              type="button"
-              className="menu-link"
-              onClick={() => goToSection('hero')}
-            >
-              Novedades
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              className="menu-link"
-              onClick={() => goToSection('catalogo')}
-            >
-              Catalogo
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              className="menu-link"
-              onClick={() => goToSection('contacto')}
-            >
-              Contacto
-            </button>
-          </li>
-          <li className="menu-divider"></li>
-          <li>
-            <button
-              type="button"
-              className="menu-link"
-              onClick={() => {
-                setMenuOpen(false);
-                setCartOpen(true);
-              }}
-            >
-              Carrito ({cartCount})
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              className="menu-link"
-              onClick={() => goToSection('favoritos')}
-            >
-              Favoritos ({favoritesCount})
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              className="menu-link"
-              onClick={() => {
-                setMenuOpen(false);
-                setCartOpen(false);
-                navigate('/perfil');
-              }}
-            >
-              Mi perfil
-            </button>
-          </li>
-        </ul>
-      </nav>
-    </header>
+      <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
+    </>
   );
 }
 
