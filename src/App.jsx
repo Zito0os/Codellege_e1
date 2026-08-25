@@ -137,9 +137,9 @@ const basicColors = [
 ];
 
 const switchOptions = [
-  { name: 'Rojo', price: 320, image: switch1 },
-  { name: 'Cafe', price: 340, image: switch2 },
-  { name: 'Azul', price: 350, image: switch3 },
+  { name: 'Rojo', price: 420, image: switch1 },
+  { name: 'Cafe', price: 600, image: switch3 },
+  { name: 'Azul', price: 300, image: switch2 },
 ];
 
 const baseColorOptions = [
