@@ -432,6 +432,8 @@ function Header({
                           </span>
                         )}
 
+                        {/**Andrea - Aplicando descuento  */}
+
                         <div className="cart-prices">
                           {product.descuento > 0 && (
                             <span className="cart-original-price">
@@ -442,6 +444,8 @@ function Header({
                             ${finalPrice.toFixed(2)}
                           </span>
                         </div>
+                       
+
 
                         <div className="cart-item-controls">
                           <button
@@ -884,7 +888,12 @@ function Catalog() {
       </div>
 
       <section id="catalogo" className="catalog-grid">
-        {filteredProducts.map((product) => (
+        {filteredProducts.map((product) => {
+      const discount = (product.price * (product.descuento || 0)) / 100;
+      const finalPrice = product.price - discount;
+        
+
+    return(
           <article
             className="product-card"
             key={product.id}
@@ -930,8 +939,31 @@ function Catalog() {
             <div className="product-info">
               <span className="product-tag">{product.color}</span>
               <h2>{product.title}</h2>
-              <h2>${product.price.toFixed(2)}</h2>
+                {product.descuento > 0 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '2px' }}>
+                  <span style={{ 
+                    textDecoration: 'line-through', 
+                    opacity: 1.0, 
+                    fontSize: '0.95em', 
+                    color: '#ff2c2c' 
+                  }}>
+                    ${product.price.toFixed(2)}
+                  </span>
+
+                  <h2 style={{ margin: 0 ,fontSize: '1.8em'}}>
+                    ${finalPrice.toFixed(2)}
+                  </h2>
+                </div>
+              ) : (
+                <h2 style={{ margin: 0 ,fontSize: '1.8em'}}>
+                  ${product.price.toFixed(2)}
+                </h2>
+              )}
             </div>
+
+
+
+
 
             <div className="product-actions">
               <button
@@ -960,7 +992,8 @@ function Catalog() {
               </button>
             </div>
           </article>
-        ))}
+        );
+})}
 
         {filteredProducts.length === 0 && (
           <p className="empty-results">
