@@ -10,15 +10,29 @@ export default function MiPerfil() {
 
   // Estado donde se guardarán los pedidos
   const [orders, setOrders] = useState([]);
+  const [nombreUsuario, setNombreUsuario] = useState('');
 
   // Obtener los pedidos guardados
   useEffect(() => {
+    try {
+      const usuario = JSON.parse(localStorage.getItem('usuario'));
+      if (!usuario) {
+        navigate('/login', { replace: true });
+        return;
+      }
+
+      setNombreUsuario(usuario.nombre || '');
+    } catch (error) {
+      navigate('/login', { replace: true });
+      return;
+    }
+
     const savedOrders = JSON.parse(
       localStorage.getItem('orders')
     ) || [];
 
     setOrders(savedOrders);
-  }, []);
+  }, [navigate]);
 
   return (
     <main className="profile-page">
@@ -65,7 +79,7 @@ export default function MiPerfil() {
           <div className="profile-user-info">
 
             <h2>
-              Zito_os
+              {nombreUsuario}
             </h2>
 
           </div>

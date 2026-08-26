@@ -24,9 +24,11 @@ import Resultados from './Resultados';
 import Compra from './Compra_realizada';
 import CompraCarrito from './CompraCarrito';
 import MiPerfil from './MiPerfil';
+import Auth from './Auth';
 import log from './assets/log.PNG';
 import ter from './assets/ter.jpg';
 import arco from './assets/arco.jpg';
+import perfil from './assets/perfil.jpg';
 import switch1 from './assets/switch1.webp';
 import switch2 from './assets/switch2.webp';
 import switch3 from './assets/switch3.webp';
@@ -40,6 +42,21 @@ import keycaps1 from './assets/keycaps1.webp';
 import keycaps2 from './assets/keycaps2.webp';
 import keycaps3 from './assets/keycaps3.png';
 import './App.css';
+
+// ir a perfil o login
+const goToAccount = (navigate) => {
+  try {
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+    if (usuario) {
+      navigate('/perfil');
+      return;
+    }
+  } catch (error) {
+    // sin sesion
+  }
+
+  navigate('/login');
+};
 
 // lista productos
 const products = [
@@ -183,141 +200,6 @@ const advertisements = [
   },
 ];
 
-// Modal para Registro e Inicio de Sesion
-function AuthModal({ isOpen, onClose }) {
-  const [isRegister, setIsRegister] = useState(true);
-  const [formData, setFormData] = useState({
-    nombre: '',
-    email: '',
-    password: '',
-  });
-  const [mensaje, setMensaje] = useState('');
-  const [error, setError] = useState('');
-
-  if (!isOpen) return null;
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setMensaje('');
-    setError('');
-
-    const endpoint = isRegister ? '/api/registro' : '/api/login';
-
-    const payload = isRegister
-      ? { nombre: formData.nombre, email: formData.email, password: formData.password }
-      : { email: formData.email, password: formData.password };
-
-    try {
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const text = await res.text();
-      let data = {};
-      try {
-        data = text ? JSON.parse(text) : {};
-      } catch (parseErr) {
-        throw new Error('Respuesta no válida del servidor');
-      }
-
-      if (!res.ok) {
-        throw new Error(data.error || `Error ${res.status}: Ocurrió un error en el servidor`);
-      }
-
-      setMensaje(data.mensaje || 'Operación realizada con éxito');
-      setFormData({ nombre: '', email: '', password: '' });
-      if (!isRegister && data.usuario) {
-        localStorage.setItem('usuario', JSON.stringify(data.usuario));
-      }
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  return (
-    <div className="auth-modal-overlay">
-      <div className="auth-modal-content">
-        <button type="button" className="auth-modal-close" onClick={onClose}>
-          ✕
-        </button>
-
-        <h2>{isRegister ? 'Crear Cuenta' : 'Iniciar Sesión'}</h2>
-
-        {mensaje && <p className="auth-msg success">{mensaje}</p>}
-        {error && <p className="auth-msg error">{error}</p>}
-
-        <form onSubmit={handleSubmit} className="auth-form">
-          {isRegister && (
-            <div className="auth-field">
-              <label>Nombre Completo:</label>
-              <input
-                type="text"
-                name="nombre"
-                value={formData.nombre}
-                onChange={handleChange}
-                required
-              />
-            </div>
-          )}
-
-          <div className="auth-field">
-            <label>Correo Electrónico:</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="auth-field">
-            <label>Contraseña:</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <button type="submit" className="auth-submit-btn">
-            {isRegister ? 'Registrarse' : 'Ingresar'}
-          </button>
-        </form>
-
-        <p className="auth-toggle-text">
-          {isRegister ? '¿Ya tienes una cuenta?' : '¿Aún no tienes cuenta?'}
-          <button
-            type="button"
-            className="auth-toggle-btn"
-            onClick={() => {
-              setIsRegister(!isRegister);
-              setMensaje('');
-              setError('');
-            }}
-          >
-            {isRegister ? ' Inicia sesión' : ' Regístrate'}
-          </button>
-        </p>
-      </div>
-    </div>
-  );
-}
-
-
 // header pagina
 function Header({
   menuOpen,
@@ -332,7 +214,6 @@ function Header({
   const navigate = useNavigate();
   // abrir cerrar carrito
   const [cartOpen, setCartOpen] = useState(false);
-  const [authOpen, setAuthOpen] = useState(false);
   const cartMenuRef = useRef(null);
   const cartButtonRef = useRef(null);
 
@@ -432,7 +313,6 @@ function Header({
   };
 
   return (
-    <>
     <header className="header-glass">
       <button type="button" className="logo" onClick={goHome}>
         Peri-Soft
@@ -460,6 +340,18 @@ function Header({
           <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
         </svg>
         <span>({cartCount})</span>
+      </button>
+
+      <button
+        type="button"
+        className="header-profile-button"
+        onClick={() => {
+          setCartOpen(false);
+          goToAccount(navigate);
+        }}
+        title="Perfil"
+      >
+        <img src={perfil} alt="Perfil" />
       </button>
 
       {cartOpen && (
@@ -733,32 +625,15 @@ function Header({
               onClick={() => {
                 setMenuOpen(false);
                 setCartOpen(false);
-                navigate('/perfil');
+                goToAccount(navigate);
               }}
             >
               Mi perfil
             </button>
           </li>
-          <li>
-            <button
-                type="button"
-                className="menu-link"
-                onClick={() => {
-                  setMenuOpen(false);
-                  setCartOpen(false);
-                  setAuthOpen(true);
-                }}
-              >
-                Registro / Login
-            </button>
-          </li>
         </ul>
       </nav>
     </header>
-    <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
-  </>
-    
-  
   );
 }
 
@@ -1547,6 +1422,7 @@ export default function App() {
       <Route path="/compra/:productId" element={<CompraPage />} />
       <Route path="/compra-carrito" element={<CompraCarrito />} />
       <Route path="/perfil" element={<MiPerfil />} />
+      <Route path="/login" element={<Auth />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
