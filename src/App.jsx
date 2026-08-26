@@ -332,7 +332,7 @@ function Header({
   const navigate = useNavigate();
   // abrir cerrar carrito
   const [cartOpen, setCartOpen] = useState(false);
-  const [authOpen, setauthOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
   const cartMenuRef = useRef(null);
   const cartButtonRef = useRef(null);
 
