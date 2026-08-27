@@ -1,15 +1,104 @@
-datasource db {
-  provider = "sqlite"
-}
-
 generator client {
   provider = "prisma-client-js"
 }
 
+datasource db {
+  provider = "sqlite"
+}
+
 model Usuario {
-  id            Int      @id @default(autoincrement())
+  id            Int        @id @default(autoincrement())
   nombre        String
-  email         String   @unique
+  email         String     @unique
   password      String
-  fechaRegistro DateTime @default(now())
+  fechaRegistro DateTime   @default(now())
+  Favorito      Favorito[]
+  Pedido        Pedido[]
+}
+
+model DetallePedido {
+  id             Int      @id @default(autoincrement())
+  pedidoId       Int
+  productoId     Int
+  cantidad       Int      @default(1)
+  precioUnitario Decimal
+  Producto       Producto @relation(fields: [productoId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Pedido         Pedido   @relation(fields: [pedidoId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model Favorito {
+  id            Int      @id @default(autoincrement())
+  usuarioId     Int
+  productoId    Int
+  fechaAgregado DateTime @default(now())
+  Producto      Producto @relation(fields: [productoId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  Usuario       Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([usuarioId, productoId], map: "sqlite_autoindex_Favorito_1")
+}
+
+model Pedido {
+  id            Int             @id @default(autoincrement())
+  usuarioId     Int
+  fecha         DateTime
+  hora          DateTime
+  metodoPago    String
+  estado        String          @default("pendiente")
+  total         Decimal
+  DetallePedido DetallePedido[]
+  Usuario       Usuario         @relation(fields: [usuarioId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Producto {
+  id                    Int                    @id @default(autoincrement())
+  nombre                String
+  descripcion           String?
+  precio                Decimal
+  descuento             Decimal                @default(0)
+  tipoSwitch            String?
+  color                 String?
+  caracteristicas       String?
+  imagen                String?
+  esCustom              Boolean                @default(false)
+  fechaCreacion         DateTime               @default(now())
+  DetallePedido         DetallePedido[]
+  Favorito              Favorito[]
+  ProductoPersonalizado ProductoPersonalizado?
+}
+
+model ProductoPersonalizado {
+  id         Int        @id @default(autoincrement())
+  switchId   Int
+  baseId     Int
+  pcbId      Int
+  keycapId   Int
+  TipoKeycap TipoKeycap @relation(fields: [keycapId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  TipoPCB    TipoPCB    @relation(fields: [pcbId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  TipoBase   TipoBase   @relation(fields: [baseId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  TipoSwitch TipoSwitch @relation(fields: [switchId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Producto   Producto   @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model TipoBase {
+  id                    Int                     @id @default(autoincrement())
+  nombre                String                  @unique(map: "sqlite_autoindex_TipoBase_1")
+  ProductoPersonalizado ProductoPersonalizado[]
+}
+
+model TipoKeycap {
+  id                    Int                     @id @default(autoincrement())
+  nombre                String                  @unique(map: "sqlite_autoindex_TipoKeycap_1")
+  ProductoPersonalizado ProductoPersonalizado[]
+}
+
+model TipoPCB {
+  id                    Int                     @id @default(autoincrement())
+  nombre                String                  @unique(map: "sqlite_autoindex_TipoPCB_1")
+  ProductoPersonalizado ProductoPersonalizado[]
+}
+
+model TipoSwitch {
+  id                    Int                     @id @default(autoincrement())
+  nombre                String                  @unique(map: "sqlite_autoindex_TipoSwitch_1")
+  ProductoPersonalizado ProductoPersonalizado[]
 }
