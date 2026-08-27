@@ -3,20 +3,9 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import './App.css';
 
-const products = [
-  { id: 1, title: 'Reddragon', price: 899, descuento: 10 },
-  { id: 2, title: 'Corsair', price: 2499, descuento: 0 },
-  { id: 3, title: 'Razer', price: 1899, descuento: 15 },
-  { id: 4, title: 'Logitech', price: 1599, descuento: 0 },
-  { id: 5, title: 'Epomaker', price: 1600, descuento: 0 },
-  { id: 6, title: 'Razer', price: 1400, descuento: 0 },
-  { id: 7, title: 'Terport', price: 1799, descuento: 0 },
-  { id: 8, title: 'Logitech', price: 1399, descuento: 50 },
-];
-
-function getItemPrice(item) {
+function getItemPrice(item, products) {
   if (item.isCustom) {
-    return item.price;
+    return Number(item.precio || 0);
   }
 
   const product = products.find((productItem) => productItem.id === item.id);
@@ -24,10 +13,11 @@ function getItemPrice(item) {
     return 0;
   }
 
-  return product.price - (product.price * product.descuento) / 100;
+  const price = Number(product.precio);
+  return price - (price * Number(product.descuento || 0)) / 100;
 }
 
-export default function CompraCarrito() {
+export default function CompraCarrito({ products }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [order, setOrder] = useState(null);
@@ -53,7 +43,7 @@ export default function CompraCarrito() {
       }
 
       const product = products.find((productItem) => productItem.id === item.id);
-      return product ? `${item.quantity} x ${product.title}` : null;
+      return product ? `${item.quantity} x ${product.nombre}` : null;
     }).filter(Boolean);
 
     const newOrder = {
@@ -69,7 +59,7 @@ export default function CompraCarrito() {
       }),
       status: 'En preparación',
       total: `$${cart.reduce(
-        (total, item) => total + getItemPrice(item) * item.quantity,
+        (total, item) => total + getItemPrice(item, products) * item.quantity,
         0
       ).toFixed(2)}`,
       payment: 'Tarjeta de crédito',

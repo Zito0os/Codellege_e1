@@ -51,7 +51,7 @@ const goToAccount = (navigate) => {
       navigate('/perfil');
       return;
     }
-  } catch (error) {
+  } catch {
     // sin sesion
   }
 
@@ -59,7 +59,7 @@ const goToAccount = (navigate) => {
 };
 
 const productImages = {
-  'REDDRAGON.PNG': REDDRAGON,
+  'REDDRAGON.PNG': REDRAGON,
   'cor.jpg': cor,
   'RAZER.PNG': RAZER,
   'LOGITECH.PNG': LOGITECH,
@@ -68,6 +68,14 @@ const productImages = {
   'ter.jpg': ter,
   'log.PNG': log,
 };
+
+const toProductView = (product) => ({
+  ...product,
+  title: product.nombre,
+  price: Number(product.precio),
+  image: productImages[product.imagen],
+  tipo_switch: product.tipoSwitch,
+});
 
 // opciones personalizar
 const basicColors = [
@@ -145,10 +153,6 @@ function Header({
   const cartMenuRef = useRef(null);
   const cartButtonRef = useRef(null);
 
-  const closeMenu = () => {
-    setMenuOpen(false);
-  };
-
   // cerrar carrito al click afuera
   useEffect(() => {
     if (!cartOpen) {
@@ -218,8 +222,6 @@ function Header({
         const descuento = Number(product.descuento || 0);
 
         const discount = (precio * descuento) / 100;
-        const finalPrice = precio - discount;
-
         subtotal += precio * item.quantity;
         totalDiscount += discount * item.quantity;
     });
@@ -1293,7 +1295,7 @@ function ProductPage({ products }) {
   // guardado carrito
   const [cart, setCart] = useState([]);
   // guardado favoritos
-  const [favorites, setFavorites] = useState([]);
+  const [favorites] = useState([]);
 
   const product = products.find((item) => item.id === Number(productId));
 
@@ -1334,7 +1336,7 @@ function ProductPage({ products }) {
         updateCartQuantity={updateCartQuantity}
       />
       <Resultados
-        product={product}
+        product={toProductView(product)}
         onBack={() => navigate('/')}
         onBuy={() => navigate(`/compra/${product.id}`)}
       />
@@ -1356,7 +1358,7 @@ function CompraPage({ products }) {
 
   return (
     <Compra
-      product={product}
+      product={toProductView(product)}
       purchaseKey={location.key}
       onBack={() => navigate('/')}
     />
@@ -1422,7 +1424,7 @@ export default function App() {
 
       <Route
         path="/compra-carrito"
-        element={<CompraCarrito />}
+        element={<CompraCarrito products={products} />}
       />
 
       <Route

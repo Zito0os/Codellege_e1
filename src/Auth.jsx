@@ -49,7 +49,7 @@ export default function Auth() {
       try {
         data = text ? JSON.parse(text) : {};
       } catch (parseErr) {
-        throw new Error('Respuesta no válida del servidor');
+        throw new Error('Respuesta no válida del servidor', { cause: parseErr });
       }
 
       if (!res.ok) {

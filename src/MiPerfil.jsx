@@ -22,7 +22,7 @@ export default function MiPerfil() {
       }
 
       setNombreUsuario(usuario.nombre || '');
-    } catch (error) {
+    } catch {
       navigate('/login', { replace: true });
       return;
     }
