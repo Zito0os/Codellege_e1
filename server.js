@@ -85,6 +85,28 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+// Endpoint para obtener todos los productos
+app.get('/api/productos', async (req, res) => {
+  try {
+    const productos = await prisma.producto.findMany({
+      orderBy: {
+        id: 'asc',
+      },
+    });
+
+    return res.json(productos);
+  } catch (error) {
+    console.error('ERROR AL OBTENER PRODUCTOS:', error);
+    return res.status(500).json({
+      error: error.message || 'Error al obtener los productos',
+    });
+  }
+});
+
+
+
+
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor backend corriendo en http://localhost:3000`);

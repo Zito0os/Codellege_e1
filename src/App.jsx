@@ -58,89 +58,16 @@ const goToAccount = (navigate) => {
   navigate('/login');
 };
 
-// lista productos
-const products = [
-  {
-    title: 'Reddragon',
-    color: 'Rojo',
-    descuento: 10,
-    tipo_switch: 'Blue',
-    price: 899.00,
-    description: 'El aliado perfecto para dar el salto al gaming competitivo sin gastar de más. Con su formato compacto del 60%, este Redragon libera espacio vital en tu escritorio para mover el mouse con total libertad. Sus switches Blue ofrecen esa respuesta táctil y el clásico sonido "clicky" súper preciso en cada partida.',
-    image: REDRAGON,
-    id: 1,
-  },
-  {
-    title: 'Corsair',
-    color: 'Negro/Gris',
-    tipo_switch: 'Red',
-    descuento: 0,
-    price: 2499.00,
-    description: 'El buque insignia definitivo para tu setup. Construcción sólida en aluminio cepillado con switches Red lineales para una velocidad de respuesta instantánea y fluida. Incluye panel de control táctil, teclas macro dedicadas y reposamuñecas ergonómico de máximo confort para dominar cualquier partida.',
-    image: cor,
-    id: 2,
-  },
-  {
-    title: 'Razer',
-    color: 'Verde/Negro',
-    tipo_switch: 'Brown',
-    descuento: 15,
-    price: 1899.00,
-    description:'Diseñado para llevar tu rendimiento al siguiente nivel. Equipado con switches Brown de respuesta táctil equilibrada y silenciosa, este teclado Razer combina la velocidad necesaria para partidas competitivas con la comodidad ideal para largas sesiones de juego o trabajo.',
-    image: RAZER,
-    id: 3,
-  },
-  {
-    title: 'Logitech',
-    color: 'Blanco/Negro',
-    tipo_switch: 'Brown',
-    descuento: 0,
-    price: 1599.00,
-    description: 'Diseñado bajo los estándares del gaming profesional. Su formato TKL optimiza el espacio en tu escritorio para un control absoluto del mouse, mientras que sus switches Brown ofrecen una respuesta táctil rápida, silenciosa y ultraprecisa. La combinación ideal para dominar tanto en partidas competitivas como en tu jornada diaria.',
-    image: LOGITECH,
-    id: 4,
-  },
-  {
-    title: 'Epomaker',
-    color: 'Verde/Negro',
-    tipo_switch: 'Blue',
-    descuento: 0,
-    price: 1600.00,
-    description: 'Libertad inalámbrica y un diseño ultra compacto para tu setup. Este Epomaker combina una excelente calidad de construcción con conectividad wireless para mantener tu escritorio impecable y libre de cables. Equipado con switches Blue para una respuesta táctil instantánea y el inconfundible sonido "clicky" en cada pulsación.',
-    image: EPOMAKER,
-    id: 5,
-  },
-  {
-    title: 'Razer',
-    color: 'Blanco/Negro',
-    tipo_switch: 'Red',
-    descuento: 0,
-    price: 1400.00,
-    description: 'Estética vibrante y velocidad en cada tecla. Este modelo cuenta con iluminación arcoíris envolvente y switches Red lineales que garantizan pulsaciones suaves, fluidas y ultrarrápidas sin resistencia al presionar. Su diseño de teclas flotantes no solo luce increíble en tu escritorio, sino que facilita la limpieza y mejora la ergonomía en largas sesiones.',
-    image: arco,
-    id: 6,
-  },
-  {
-    title: 'Terport',
-    color: 'Negro',
-    tipo_switch: 'Brown',
-    descuento: 0,
-    price: 1799.00,
-    description: 'Estética lateral envolvente y tacto equilibrado en cada tecla. Este teclado Terport destaca por su exclusiva tira de iluminación RGB en los bordes laterales con 4 modos configurables para darle una atmósfera única a tu setup. Equipado con switches Brown, ofrece el punto exacto entre respuesta táctil rápida para gaming y suavidad silenciosa para trabajo prolongado.',
-    image: ter,
-    id: 7,
-  },
-  {
-    title: 'Logitech',
-    color: 'Rosa',
-    tipo_switch: 'Blue',
-    descuento: 50,
-    price: 1399.00,
-    description: 'Estilo vibrante y libertad inalámbrica en un solo dispositivo. Este teclado Logitech en acabado rosa magenta aporta una estética audaz y moderna a tu setup. Su formato compacto con conectividad Bluetooth optimiza tu espacio de trabajo sin cables, mientras que sus switches Blue ofrecen una respuesta táctil ultraprecisa con el clásico clic audible en cada pulsación.',
-    image: log,
-    id: 8,
-  },
-];
+const productImages = {
+  'REDDRAGON.PNG': REDDRAGON,
+  'cor.jpg': cor,
+  'RAZER.PNG': RAZER,
+  'LOGITECH.PNG': LOGITECH,
+  'EPOMAKER.PNG': EPOMAKER,
+  'arco.jpg': arco,
+  'ter.jpg': ter,
+  'log.PNG': log,
+};
 
 // opciones personalizar
 const basicColors = [
@@ -155,27 +82,27 @@ const basicColors = [
 ];
 
 const switchOptions = [
-  { name: 'Rojo', price: 420, image: switch1 },
-  { name: 'Cafe', price: 600, image: switch3 },
-  { name: 'Azul', price: 300, image: switch2 },
+  { name: 'Rojo', precio: 420, image: switch1 },
+  { name: 'Cafe', precio: 600, image: switch3 },
+  { name: 'Azul', precio: 300, image: switch2 },
 ];
 
 const baseColorOptions = [
-  { name: 'Negra', price: 400, image: base1 },
-  { name: 'Blanca', price: 420, image: base2 },
-  { name: 'Custom', price: 450, image: base3, hasColors: true },
+  { name: 'Negra', precio: 400, image: base1 },
+  { name: 'Blanca', precio: 420, image: base2 },
+  { name: 'Custom', precio: 450, image: base3, hasColors: true },
 ];
 
 const pcbOptions = [
-  { name: 'Soldada', price: 480, image: pcb1 },
-  { name: 'HotSwap', price: 550, image: pcb2 },
-  { name: 'Wireless', price: 650, image: pcb3 },
+  { name: 'Soldada', precio: 480, image: pcb1 },
+  { name: 'HotSwap', precio: 550, image: pcb2 },
+  { name: 'Wireless', precio: 650, image: pcb3 },
 ];
 
 const keycapOptions = [
-  { name: 'ABS', price: 280, image: keycaps1, hasColors: true },
-  { name: 'PBT', price: 450, image: keycaps2, hasColors: true },
-  { name: 'Resina', price: 980, image: keycaps3, hasColors: true },
+  { name: 'ABS', precio: 280, image: keycaps1, hasColors: true },
+  { name: 'PBT', precio: 450, image: keycaps2, hasColors: true },
+  { name: 'Resina', precio: 980, image: keycaps3, hasColors: true },
 ];
 
 // banners hero
@@ -205,6 +132,7 @@ function Header({
   menuOpen,
   setMenuOpen,
   cart,
+  products,
   favorites,
   removeFromCart,
   updateCartQuantity,
@@ -277,7 +205,7 @@ function Header({
 
     cart.forEach((item) => {
       if (item.isCustom) {
-        subtotal += item.price * item.quantity;
+        subtotal += item.precio * item.quantity;
         return;
       }
 
@@ -286,11 +214,14 @@ function Header({
         return;
       }
 
-      const discount = (product.price * product.descuento) / 100;
-      const finalPrice = product.price - discount;
+        const precio = Number(product.precio);
+        const descuento = Number(product.descuento || 0);
 
-      subtotal += product.price * item.quantity;
-      totalDiscount += discount * item.quantity;
+        const discount = (precio * descuento) / 100;
+        const finalPrice = precio - discount;
+
+        subtotal += precio * item.quantity;
+        totalDiscount += discount * item.quantity;
     });
 
     return {
@@ -377,7 +308,7 @@ function Header({
               <div className="cart-menu-items">
                 {cart.map((item) => {
                   if (item.isCustom) {
-                    const itemTotal = item.price * item.quantity;
+                    const itemTotal = item.precio * item.quantity;
 
                     return (
                       <div className="cart-menu-item" key={item.id}>
@@ -393,7 +324,7 @@ function Header({
 
                           <div className="cart-prices">
                             <span className="cart-final-price">
-                              ${item.price.toFixed(2)}
+                              ${Number(item.precio).toFixed(2)}
                             </span>
                           </div>
 
@@ -441,20 +372,20 @@ function Header({
                     return null;
                   }
 
-                  const discount = (product.price * product.descuento) / 100;
-                  const finalPrice = product.price - discount;
+                  const discount = (Number(product.precio) * product.descuento) / 100;
+                  const finalPrice = Number(product.precio) - discount;
                   const itemTotal = finalPrice * item.quantity;
 
                   return (
                     <div className="cart-menu-item" key={item.id}>
                       <img
-                        src={product.image}
-                        alt={product.title}
+                        src={productImages[product.imagen]}
+                        alt={product.nombre}
                         className="cart-menu-item-image"
                       />
 
                       <div className="cart-menu-item-info">
-                        <h3>{product.title}</h3>
+                        <h3>{product.nombre}</h3>
                         <p className="cart-item-color">{product.color}</p>
 
                         {product.descuento > 0 && (
@@ -468,7 +399,7 @@ function Header({
                         <div className="cart-prices">
                           {product.descuento > 0 && (
                             <span className="cart-original-price">
-                              ${product.price.toFixed(2)}
+                              ${Number(product.precio).toFixed(2)}
                             </span>
                           )}
                           <span className="cart-final-price">
@@ -638,7 +569,7 @@ function Header({
 }
 
 // pagina catalogo
-function Catalog() {
+function Catalog({ products }) {
   const navigate = useNavigate();
   const [activeAd, setActiveAd] = useState(0);
   const [switchFilter, setSwitchFilter] = useState('Todos');
@@ -678,16 +609,18 @@ function Catalog() {
   const filteredProducts = [...products]
     .filter(
       (product) =>
-        switchFilter === 'Todos' || product.tipo_switch === switchFilter
+        switchFilter === 'Todos' || product.tipoSwitch === switchFilter
     )
     .filter((product) => !offersOnly || product.descuento > 0)
     .sort((a, b) => {
       if (priceOrder === 'high-to-low') {
-        return b.price - a.price;
+        return Number(b.precio) - Number(a.precio);
       }
+
       if (priceOrder === 'low-to-high') {
-        return a.price - b.price;
+        return Number(a.precio) - Number(b.precio);
       }
+
       return 0;
     });
 
@@ -701,22 +634,23 @@ function Catalog() {
   };
 
   // agregar carrito
-  const handleAddToCart = (productId) => {
-    setCart((currentCart) => {
-      const existingItem = currentCart.find((item) => item.id === productId);
+const handleAddToCart = (productId) => {
+  setCart((currentCart) => {
+    const existingItem = currentCart.find(
+      (item) => item.id === productId
+    );
 
-      if (existingItem) {
-        return currentCart.map((item) =>
-          item.id === productId
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
+    if (existingItem) {
+      return currentCart.map((item) =>
+        item.id === productId
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+    }
 
-      return [...currentCart, { id: productId, quantity: 1 }];
-    });
-  };
-
+    return [...currentCart, { id: productId, quantity: 1 }];
+  });
+};
   // quitar carrito
   const removeFromCart = (productId) => {
     setCart((currentCart) =>
@@ -757,7 +691,7 @@ function Catalog() {
 
   const getOptionPrice = (options, selectedName) => {
     const option = options.find((item) => item.name === selectedName);
-    return option ? option.price : 0;
+    return option ? Number(option.precio) : 0;
   };
 
   const customParts = [];
@@ -766,7 +700,7 @@ function Catalog() {
     customParts.push({
       label: 'Switch',
       name: selectedSwitch,
-      price: getOptionPrice(switchOptions, selectedSwitch),
+      precio: getOptionPrice(switchOptions, selectedSwitch),
     });
   }
 
@@ -779,7 +713,7 @@ function Catalog() {
     customParts.push({
       label: 'Base',
       name: baseName,
-      price: getOptionPrice(baseColorOptions, selectedBase),
+      precio: getOptionPrice(baseColorOptions, selectedBase),
     });
   }
 
@@ -787,7 +721,7 @@ function Catalog() {
     customParts.push({
       label: 'PCB',
       name: selectedPcb,
-      price: getOptionPrice(pcbOptions, selectedPcb),
+      precio: getOptionPrice(pcbOptions, selectedPcb),
     });
   }
 
@@ -799,11 +733,11 @@ function Catalog() {
     customParts.push({
       label: 'Keycaps',
       name: keycapName,
-      price: getOptionPrice(keycapOptions, selectedKeycaps),
+      precio: getOptionPrice(keycapOptions, selectedKeycaps),
     });
   }
 
-  const customTotal = customParts.reduce((sum, part) => sum + part.price, 0);
+  const customTotal = customParts.reduce((sum, part) => sum + Number(part.precio), 0);
   const customReady =
     selectedSwitch &&
     selectedBase &&
@@ -829,7 +763,7 @@ function Catalog() {
         quantity: 1,
         isCustom: true,
         title: 'Teclado personalizado',
-        price: customTotal,
+        precio: customTotal,
         parts: partsText,
         image: arco,
       },
@@ -842,6 +776,7 @@ function Catalog() {
         menuOpen={menuOpen}
         setMenuOpen={setMenuOpen}
         cart={cart}
+        products={products}
         favorites={favorites}
         removeFromCart={removeFromCart}
         updateCartQuantity={updateCartQuantity}
@@ -929,8 +864,11 @@ function Catalog() {
 
       <section id="catalogo" className="catalog-grid">
         {filteredProducts.map((product) => {
-      const discount = (product.price * (product.descuento || 0)) / 100;
-      const finalPrice = product.price - discount;
+          const precio = Number(product.precio);
+          const descuento = Number(product.descuento || 0);
+
+          const discount = (precio * descuento) / 100;
+          const finalPrice = precio - discount;
         
 
     return(
@@ -941,13 +879,13 @@ function Catalog() {
           >
             <div className="product-image-wrap">
               <img
-                src={product.image}
-                alt={product.title}
+                src={productImages[product.imagen]}
+                alt={product.nombre}
                 className="product-image"
               />
 
               {product.descuento > 0 && (
-                <span className="discount-badge">-{product.descuento}%</span>
+                <span className="discount-badge">-{Number(product.descuento)}%</span>
               )}
 
               <button
@@ -975,32 +913,41 @@ function Catalog() {
                 </svg>
               </button>
             </div>
+              <div className="product-info">
+                <span className="product-tag">{product.color}</span>
 
-            <div className="product-info">
-              <span className="product-tag">{product.color}</span>
-              <h2>{product.title}</h2>
-                {product.descuento > 0 ? (
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '2px' }}>
-                  <span style={{ 
-                    textDecoration: 'line-through', 
-                    opacity: 1.0, 
-                    fontSize: '0.95em', 
-                    color: '#ff2c2c' 
-                  }}>
-                    ${product.price.toFixed(2)}
-                  </span>
+                <h2>{product.nombre}</h2>
 
-                  <h2 style={{ margin: 0 ,fontSize: '1.8em'}}>
-                    ${finalPrice.toFixed(2)}
+                {Number(product.descuento) > 0 ? (
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
+                      gap: '2px',
+                    }}
+                  >
+                    <span
+                      style={{
+                        textDecoration: 'line-through',
+                        opacity: 1,
+                        fontSize: '0.95em',
+                        color: '#ff2c2c',
+                      }}
+                    >
+                      ${Number(product.precio).toFixed(2)}
+                    </span>
+
+                    <h2 style={{ margin: 0, fontSize: '1.8em' }}>
+                      ${finalPrice.toFixed(2)}
+                    </h2>
+                  </div>
+                ) : (
+                  <h2 style={{ margin: 0, fontSize: '1.8em' }}>
+                    ${Number(product.precio).toFixed(2)}
                   </h2>
-                </div>
-              ) : (
-                <h2 style={{ margin: 0 ,fontSize: '1.8em'}}>
-                  ${product.price.toFixed(2)}
-                </h2>
-              )}
-            </div>
-
+                )}
+              </div>
 
 
 
@@ -1062,15 +1009,17 @@ function Catalog() {
 
               return (
                 <div key={favId} className="favorite-item">
-                  <img
-                    src={product.image}
-                    alt={product.title}
-                    className="favorite-item-image"
-                  />
+                  
+                    <img
+                      src={productImages[product.imagen]}
+                      alt={product.nombre}
+                      className="product-image"
+                    />
+                  
                   <div className="favorite-item-info">
-                    <h4>{product.title}</h4>
+                    <h4>{product.nombre}</h4>
                     <p>{product.color}</p>
-                    <p className="item-price">${product.price.toFixed(2)}</p>
+                    <p className="item-price">${Number(product.precio).toFixed(2)}</p>
                   </div>
                   <button
                     type="button"
@@ -1141,7 +1090,7 @@ function Catalog() {
                     className="custom-option-image"
                   />
                   <h4>{option.name}</h4>
-                  <p className="item-price">${option.price.toFixed(2)}</p>
+                  <p className="item-price">${Number(option.precio).toFixed(2)}</p>
                 </button>
               ))}
             </div>
@@ -1168,7 +1117,7 @@ function Catalog() {
                     className="custom-option-image"
                   />
                   <h4>{option.name}</h4>
-                  <p className="item-price">${option.price.toFixed(2)}</p>
+                  <p className="item-price">${Number(option.precio).toFixed(2)}</p>
                 </button>
               ))}
             </div>
@@ -1206,7 +1155,7 @@ function Catalog() {
                     className="custom-option-image"
                   />
                   <h4>{option.name}</h4>
-                  <p className="item-price">${option.price.toFixed(2)}</p>
+                  <p className="item-price">${Number(option.precio).toFixed(2)}</p>
                 </button>
               ))}
             </div>
@@ -1228,7 +1177,7 @@ function Catalog() {
                     className="custom-option-image"
                   />
                   <h4>{option.name}</h4>
-                  <p className="item-price">${option.price.toFixed(2)}</p>
+                  <p className="item-price">${Number(option.precio).toFixed(2)}</p>
                 </button>
               ))}
             </div>
@@ -1261,7 +1210,7 @@ function Catalog() {
                   <div key={part.label} className="custom-part-item">
                     <span>{part.label}:</span>
                     <span>
-                      {part.name} - ${part.price.toFixed(2)}
+                      {part.name} - ${Number(part.precio).toFixed(2)}
                     </span>
                   </div>
                 ))}
@@ -1337,7 +1286,7 @@ function Catalog() {
 }
 
 // pagina producto
-function ProductPage() {
+function ProductPage({ products }) {
   const navigate = useNavigate();
   const { productId } = useParams();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -1379,6 +1328,7 @@ function ProductPage() {
         menuOpen={menuOpen}
         setMenuOpen={setMenuOpen}
         cart={cart}
+        products={products}
         favorites={favorites}
         removeFromCart={removeFromCart}
         updateCartQuantity={updateCartQuantity}
@@ -1393,7 +1343,7 @@ function ProductPage() {
 }
 
 // pagina compra
-function CompraPage() {
+function CompraPage({ products }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { productId } = useParams();
@@ -1415,15 +1365,80 @@ function CompraPage() {
 
 // rutas app
 export default function App() {
+  const [products, setProducts] = useState([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
+  const [errorProducts, setErrorProducts] = useState('');
+
+  useEffect(() => {
+    const cargarProductos = async () => {
+      try {
+        setLoadingProducts(true);
+        setErrorProducts('');
+
+        const response = await fetch('/api/productos');
+
+        if (!response.ok) {
+          throw new Error('No se pudieron cargar los productos');
+        }
+
+        const data = await response.json();
+
+        setProducts(data);
+      } catch (error) {
+        console.error('ERROR AL CARGAR PRODUCTOS:', error);
+        setErrorProducts(error.message);
+      } finally {
+        setLoadingProducts(false);
+      }
+    };
+
+    cargarProductos();
+  }, []);
+
+  if (loadingProducts) {  
+    return <p>Cargando productos...</p>;
+  }
+
+  if (errorProducts) {
+    return <p>Error: {errorProducts}</p>;
+  }
+
   return (
     <Routes>
-      <Route path="/" element={<Catalog />} />
-      <Route path="/producto/:productId" element={<ProductPage />} />
-      <Route path="/compra/:productId" element={<CompraPage />} />
-      <Route path="/compra-carrito" element={<CompraCarrito />} />
-      <Route path="/perfil" element={<MiPerfil />} />
-      <Route path="/login" element={<Auth />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route
+        path="/"
+        element={<Catalog products={products} />}
+      />
+
+      <Route
+        path="/producto/:productId"
+        element={<ProductPage products={products} />}
+      />
+
+      <Route
+        path="/compra/:productId"
+        element={<CompraPage products={products} />}
+      />
+
+      <Route
+        path="/compra-carrito"
+        element={<CompraCarrito />}
+      />
+
+      <Route
+        path="/perfil"
+        element={<MiPerfil />}
+      />
+
+      <Route
+        path="/login"
+        element={<Auth />}
+      />
+
+      <Route
+        path="*"
+        element={<Navigate to="/" replace />}
+      />
     </Routes>
   );
 }
