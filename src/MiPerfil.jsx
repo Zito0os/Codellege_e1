@@ -5,34 +5,55 @@ import './App.css';
 import './Perfil.css';
 import perfil from './assets/perfil.jpg';
 
+const formatProducts = (products) => {
+  if (Array.isArray(products)) {
+    return products
+      .map((product) => `${product.quantity} x ${product.name}`)
+      .join(', ');
+  }
+
+  return products || 'Sin productos';
+};
+
 export default function MiPerfil() {
   const navigate = useNavigate();
 
   // Estado donde se guardarán los pedidos
   const [orders, setOrders] = useState([]);
   const [nombreUsuario, setNombreUsuario] = useState('');
+  const [error, setError] = useState('');
 
   // Obtener los pedidos guardados
   useEffect(() => {
-    try {
-      const usuario = JSON.parse(localStorage.getItem('usuario'));
-      if (!usuario) {
-        navigate('/login', { replace: true });
-        return;
+    const cargarPedidos = async () => {
+      try {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario) {
+          navigate('/login', { replace: true });
+          return;
+        }
+
+        setNombreUsuario(usuario.nombre || '');
+
+        const response = await fetch(`/api/pedidos/${usuario.id}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'No se pudieron cargar tus pedidos');
+        }
+
+        setOrders(data);
+      } catch {
+        setError('No se pudieron cargar tus pedidos');
       }
+    };
 
-      setNombreUsuario(usuario.nombre || '');
-    } catch {
-      navigate('/login', { replace: true });
-      return;
-    }
-
-    const savedOrders = JSON.parse(
-      localStorage.getItem('orders')
-    ) || [];
-
-    setOrders(savedOrders);
+    cargarPedidos();
   }, [navigate]);
+
+  if (error) {
+    return <p className="auth-msg error">{error}</p>;
+  }
 
   return (
     <main className="profile-page">
@@ -151,7 +172,7 @@ export default function MiPerfil() {
                           <strong>
                             Productos:
                           </strong>{' '}
-                          {order.products}
+                          {formatProducts(order.products)}
                         </p>
 
                         <p>
@@ -244,7 +265,7 @@ export default function MiPerfil() {
                           <strong>
                             Productos:
                           </strong>{' '}
-                          {order.products}
+                          {formatProducts(order.products)}
                         </p>
 
                         <p>
@@ -291,7 +312,10 @@ export default function MiPerfil() {
           <button
             type="button"
             className="logout-button"
-            onClick={() => navigate('/')}
+            onClick={() => {
+              localStorage.removeItem('usuario');
+              navigate('/login', { replace: true });
+            }}
           >
             Cerrar sesión
           </button>

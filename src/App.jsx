@@ -600,6 +600,32 @@ function Catalog({ products }) {
     return () => window.clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    const cargarFavoritos = async () => {
+      try {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario?.id) {
+          setFavorites([]);
+          return;
+        }
+
+        const response = await fetch(`/api/favoritos/${usuario.id}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'No se pudieron cargar los favoritos');
+        }
+
+        setFavorites(data);
+      } catch (error) {
+        console.error('ERROR AL CARGAR FAVORITOS:', error);
+        setFavorites([]);
+      }
+    };
+
+    cargarFavoritos();
+  }, []);
+
   const showAd = (index) => {
     setActiveAd((index + advertisements.length) % advertisements.length);
   };
@@ -675,20 +701,42 @@ const handleAddToCart = (productId) => {
   };
 
   // poner quitar favorito
-  const handleToggleFavorite = (productId) => {
-    setFavorites((currentFavorites) => {
-      if (currentFavorites.includes(productId)) {
-        return currentFavorites.filter((id) => id !== productId);
+  const handleToggleFavorite = async (productId) => {
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+    if (!usuario?.id) {
+      navigate('/login');
+      return;
+    }
+
+    const wasFavorite = favorites.includes(productId);
+    setFavorites((currentFavorites) => wasFavorite
+      ? currentFavorites.filter((id) => id !== productId)
+      : [...currentFavorites, productId]);
+
+    try {
+      const response = wasFavorite
+        ? await fetch(`/api/favoritos/${usuario.id}/${productId}`, { method: 'DELETE' })
+        : await fetch('/api/favoritos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ usuarioId: usuario.id, productoId: productId }),
+          });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'No se pudo actualizar el favorito');
       }
-      return [...currentFavorites, productId];
-    });
+    } catch (error) {
+      console.error('ERROR AL ACTUALIZAR FAVORITO:', error);
+      setFavorites((currentFavorites) => wasFavorite
+        ? [...currentFavorites, productId]
+        : currentFavorites.filter((id) => id !== productId));
+    }
   };
 
   // quitar favorito
   const removeFromFavorites = (productId) => {
-    setFavorites((currentFavorites) =>
-      currentFavorites.filter((id) => id !== productId)
-    );
+    handleToggleFavorite(productId);
   };
 
   const getOptionPrice = (options, selectedName) => {
@@ -1424,7 +1472,7 @@ export default function App() {
 
       <Route
         path="/compra-carrito"
-        element={<CompraCarrito products={products} />}
+        element={<CompraCarrito />}
       />
 
       <Route

@@ -1,26 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import './App.css';
 
-function getItemPrice(item, products) {
-  if (item.isCustom) {
-    return Number(item.precio || 0);
-  }
-
-  const product = products.find((productItem) => productItem.id === item.id);
-  if (!product) {
-    return 0;
-  }
-
-  const price = Number(product.precio);
-  return price - (price * Number(product.descuento || 0)) / 100;
-}
-
-export default function CompraCarrito({ products }) {
+export default function CompraCarrito() {
   const location = useLocation();
   const navigate = useNavigate();
   const [order, setOrder] = useState(null);
+  const [error, setError] = useState('');
+  const requestKey = useRef('');
   const cart = location.state?.cart;
 
   useEffect(() => {
@@ -32,48 +20,67 @@ export default function CompraCarrito({ products }) {
     const savedPurchase = localStorage.getItem(purchaseStorageKey);
 
     if (savedPurchase) {
-      setOrder(JSON.parse(savedPurchase));
+      const savedOrder = JSON.parse(savedPurchase);
+      if (Number.isInteger(savedOrder.id) && Array.isArray(savedOrder.products)) {
+        setOrder(savedOrder);
+        return;
+      }
+    }
+
+    if (requestKey.current === location.key) {
       return;
     }
 
-    const purchaseDate = new Date();
-    const orderItems = cart.map((item) => {
-      if (item.isCustom) {
-        return `${item.quantity} x ${item.title}`;
+    requestKey.current = location.key;
+
+    const crearPedido = async () => {
+      try {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario?.id) {
+          throw new Error('Debes iniciar sesión para realizar un pedido');
+        }
+
+        const response = await fetch('/api/pedidos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            usuarioId: usuario.id,
+            metodoPago: 'Tarjeta de crédito',
+            items: cart.map((item) => item.isCustom
+              ? {
+                  isCustom: true,
+                  nombre: item.title,
+                  precio: item.precio,
+                  parts: item.parts,
+                  imagen: 'arco.jpg',
+                  cantidad: item.quantity,
+                }
+              : { productoId: item.id, cantidad: item.quantity }),
+          }),
+        });
+        const contentType = response.headers.get('content-type') || '';
+        const data = contentType.includes('application/json')
+          ? await response.json()
+          : { error: `El servidor respondió con un formato inesperado (${response.status})` };
+
+        if (!response.ok) {
+          throw new Error(data.error || 'No se pudo registrar el pedido');
+        }
+
+        const savedOrder = { ...data, image: cart[0].image || null };
+        localStorage.setItem(purchaseStorageKey, JSON.stringify(savedOrder));
+        setOrder(savedOrder);
+      } catch (requestError) {
+        setError(requestError.message);
       }
-
-      const product = products.find((productItem) => productItem.id === item.id);
-      return product ? `${item.quantity} x ${product.nombre}` : null;
-    }).filter(Boolean);
-
-    const newOrder = {
-      id: `PS-${Date.now().toString().slice(-6)}`,
-      date: purchaseDate.toLocaleDateString('es-MX', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-      }),
-      time: purchaseDate.toLocaleTimeString('es-MX', {
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
-      status: 'En preparación',
-      total: `$${cart.reduce(
-        (total, item) => total + getItemPrice(item, products) * item.quantity,
-        0
-      ).toFixed(2)}`,
-      payment: 'Tarjeta de crédito',
-      products: orderItems.join(', '),
-      color: 'Varios',
-      tipo_switch: 'Varios',
-      image: cart[0].image || null,
     };
 
-    const savedOrders = JSON.parse(localStorage.getItem('orders')) || [];
-    localStorage.setItem('orders', JSON.stringify([...savedOrders, newOrder]));
-    localStorage.setItem(purchaseStorageKey, JSON.stringify(newOrder));
-    setOrder(newOrder);
+    crearPedido();
   }, [cart, location.key]);
+
+  if (error) {
+    return <p className="auth-msg error">{error}</p>;
+  }
 
   if (!cart?.length) {
     return <Navigate to="/" replace />;
@@ -112,12 +119,12 @@ export default function CompraCarrito({ products }) {
             <div className="purchase-info">
               <h2>Información de la compra</h2>
               <p><strong>Número de pedido:</strong> {order.id}</p>
-              <p><strong>Fecha:</strong> {order.date}</p>
-              <p><strong>Hora:</strong> {order.time}</p>
-              <p><strong>Productos:</strong> {order.products}</p>
+              <p><strong>Fecha:</strong> {new Date(order.date).toLocaleDateString('es-MX')}</p>
+              <p><strong>Hora:</strong> {new Date(order.time).toLocaleTimeString('es-MX')}</p>
+              <p><strong>Productos:</strong> {order.products.map((item) => `${item.quantity} x ${item.name}`).join(', ')}</p>
               <p><strong>Método de pago:</strong> {order.payment}</p>
               <p><strong>Estado:</strong> <span className="order-status">{order.status}</span></p>
-              <p className="purchase-total"><strong>Total pagado:</strong> {order.total}</p>
+              <p className="purchase-total"><strong>Total pagado:</strong> ${Number(order.total).toFixed(2)}</p>
             </div>
 
             <div className="action-row">

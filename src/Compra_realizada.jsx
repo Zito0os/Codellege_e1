@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './App.css';
 
 export default function CompraRealizada({ product, purchaseKey, onBack }) {
   const [order, setOrder] = useState(null);
+  const [error, setError] = useState('');
+  const requestKey = useRef('');
 
   useEffect(() => {
     if (!product || !purchaseKey) {
@@ -13,60 +15,58 @@ export default function CompraRealizada({ product, purchaseKey, onBack }) {
     const savedPurchase = localStorage.getItem(purchaseStorageKey);
 
     if (savedPurchase) {
-      setOrder(JSON.parse(savedPurchase));
+      const savedOrder = JSON.parse(savedPurchase);
+      if (Number.isInteger(savedOrder.id) && Array.isArray(savedOrder.products)) {
+        setOrder(savedOrder);
+        return;
+      }
+    }
+
+    if (requestKey.current === purchaseKey) {
       return;
     }
 
-    // Obtener la fecha y hora actual
-    const purchaseDate = new Date();
+    requestKey.current = purchaseKey;
 
-    const date = purchaseDate.toLocaleDateString('es-MX', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    });
+    const crearPedido = async () => {
+      try {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario?.id) {
+          throw new Error('Debes iniciar sesión para realizar un pedido');
+        }
 
-    const time = purchaseDate.toLocaleTimeString('es-MX', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+        const response = await fetch('/api/pedidos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            usuarioId: usuario.id,
+            metodoPago: 'Tarjeta de crédito',
+            items: [{ productoId: product.id, cantidad: 1 }],
+          }),
+        });
+        const contentType = response.headers.get('content-type') || '';
+        const data = contentType.includes('application/json')
+          ? await response.json()
+          : { error: `El servidor respondió con un formato inesperado (${response.status})` };
 
-    // Generar número de pedido
-    const orderId = `PS-${Date.now().toString().slice(-6)}`;
+        if (!response.ok) {
+          throw new Error(data.error || 'No se pudo registrar el pedido');
+        }
 
-    // Crear información del pedido
-    const newOrder = {
-      id: orderId,
-      date: date,
-      time: time,
-      status: 'En preparación',
-      total: `$${product.price.toFixed(2)}`,
-      payment: 'Tarjeta de crédito',
-      products: product.title,
-
-      // Información adicional del producto
-      image: product.image,
-      color: product.color,
-      tipo_switch: product.tipo_switch,
+        localStorage.setItem(purchaseStorageKey, JSON.stringify(data));
+        setOrder(data);
+      } catch (requestError) {
+        setError(requestError.message);
+      }
     };
 
-    // Guardar el pedido en localStorage
-    const savedOrders = JSON.parse(
-      localStorage.getItem('orders')
-    ) || [];
+    crearPedido();
 
-    savedOrders.push(newOrder);
+  }, [product, purchaseKey]);
 
-    localStorage.setItem(
-      'orders',
-      JSON.stringify(savedOrders)
-    );
-    localStorage.setItem(purchaseStorageKey, JSON.stringify(newOrder));
-
-    // Mostrar el pedido en pantalla
-    setOrder(newOrder);
-
-  }, [product]);
+  if (error) {
+    return <p className="auth-msg error">{error}</p>;
+  }
 
   if (!product || !order) {
     return null;
@@ -125,27 +125,27 @@ export default function CompraRealizada({ product, purchaseKey, onBack }) {
 
               <p>
                 <strong>Fecha:</strong>{' '}
-                {order.date}
+                {new Date(order.date).toLocaleDateString('es-MX')}
               </p>
 
               <p>
                 <strong>Hora:</strong>{' '}
-                {order.time}
+                {new Date(order.time).toLocaleTimeString('es-MX')}
               </p>
 
               <p>
                 <strong>Producto:</strong>{' '}
-                {order.products}
+                {order.products.map((item) => `${item.quantity} x ${item.name}`).join(', ')}
               </p>
 
               <p>
                 <strong>Color:</strong>{' '}
-                {order.color}
+                {product.color}
               </p>
 
               <p>
                 <strong>Switch:</strong>{' '}
-                {order.tipo_switch}
+                {product.tipo_switch}
               </p>
 
               <p>
@@ -162,7 +162,7 @@ export default function CompraRealizada({ product, purchaseKey, onBack }) {
 
               <p className="purchase-total">
                 <strong>Total pagado:</strong>{' '}
-                {order.total}
+                ${Number(order.total).toFixed(2)}
               </p>
 
             </div>
