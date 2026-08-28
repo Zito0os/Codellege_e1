@@ -58,6 +58,14 @@ const goToAccount = (navigate) => {
   navigate('/login');
 };
 
+const hasActiveSession = () => {
+  try {
+    return Boolean(JSON.parse(localStorage.getItem('usuario'))?.id);
+  } catch {
+    return false;
+  }
+};
+
 const productImages = {
   'REDDRAGON.PNG': REDRAGON,
   'cor.jpg': cor,
@@ -832,6 +840,11 @@ const handleAddToCart = (productId) => {
         updateCartQuantity={updateCartQuantity}
         onOpenPersonaliza={() => setCustomOpen(true)}
         onCheckout={() => {
+          if (!hasActiveSession()) {
+            navigate('/login');
+            return;
+          }
+
           if (cart.length > 0) {
             navigate('/compra-carrito', { state: { cart } });
           }
@@ -1386,7 +1399,14 @@ function ProductPage({ products }) {
       <Resultados
         product={toProductView(product)}
         onBack={() => navigate('/')}
-        onBuy={() => navigate(`/compra/${product.id}`)}
+        onBuy={() => {
+          if (!hasActiveSession()) {
+            navigate('/login');
+            return;
+          }
+
+          navigate(`/compra/${product.id}`);
+        }}
       />
     </>
   );
@@ -1402,6 +1422,10 @@ function CompraPage({ products }) {
 
   if (!product) {
     return <Navigate to="/" replace />;
+  }
+
+  if (!hasActiveSession()) {
+    return <Navigate to="/login" replace />;
   }
 
   return (
@@ -1472,7 +1496,9 @@ export default function App() {
 
       <Route
         path="/compra-carrito"
-        element={<CompraCarrito />}
+        element={
+          hasActiveSession() ? <CompraCarrito /> : <Navigate to="/login" replace />
+        }
       />
 
       <Route
