@@ -1,4 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
+
+import log from './assets/log.PNG';
+
+
+
 import {
   Navigate,
   Route,
@@ -6,7 +11,6 @@ import {
   useNavigate,
   useParams,
 } from 'react-router-dom';
-
 import cor from './assets/cor.jpg';
 import RAZER from './assets/RAZER.PNG';
 import REDRAGON from './assets/REDDRAGON.PNG';
@@ -22,7 +26,7 @@ import pub3 from './assets/pub3.jpg';
 import Resultados from './Resultados';
 import Compra from './Compra_realizada';
 import MiPerfil from './MiPerfil';
-import log from './assets/log.PNG';
+
 import ter from './assets/ter.jpg';
 import arco from './assets/arco.jpg';
 import switch1 from './assets/switch1.webp';
@@ -39,7 +43,7 @@ import keycaps2 from './assets/keycaps2.webp';
 import keycaps3 from './assets/keycaps3.png';
 import './App.css';
 
-// lista productos
+// lista productos catálogo
 const products = [
   {
     title: 'Reddragon',
@@ -123,7 +127,7 @@ const products = [
   },
 ];
 
-// opciones personalizar
+// Opciones de personalización vinculadas con tus imports reales
 const basicColors = [
   '#ef4444',
   '#f97316',
@@ -159,7 +163,6 @@ const keycapOptions = [
   { name: 'Resina', price: 980, image: keycaps3, hasColors: true },
 ];
 
-// banners hero
 const advertisements = [
   {
     image: pub1,
@@ -181,31 +184,39 @@ const advertisements = [
   },
 ];
 
-// header pagina
+// ==========================================================================
+// COMPONENTE HEADER INTEGRAL (SIN CORTES, NI ELEMENTOS DUPLICADOS)
+// ==========================================================================
 function Header({
   menuOpen,
   setMenuOpen,
-  cart,
-  favorites,
+  cart = [],
+  favorites = [],
   removeFromCart,
   updateCartQuantity,
   onOpenPersonaliza,
 }) {
   const navigate = useNavigate();
-  // abrir cerrar carrito
   const [cartOpen, setCartOpen] = useState(false);
   const cartMenuRef = useRef(null);
   const cartButtonRef = useRef(null);
 
-  const closeMenu = () => {
-    setMenuOpen(false);
-  };
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('peri-soft-theme');
+    return savedTheme !== 'light';
+  });
 
-  // cerrar carrito al click afuera
   useEffect(() => {
-    if (!cartOpen) {
-      return;
-    }
+    // Vinculación exacta con tu clase del CSS plano (.light-mode)
+    document.documentElement.classList.toggle('light-mode', !isDarkMode);
+    localStorage.setItem('peri-soft-theme', isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
+
+  // Manejador para cerrar el carrito al hacer click afuera
+  const favoritesCount = favorites ? favorites.length : 0;
+
+  useEffect(() => {
+    if (!cartOpen) return;
 
     const handleClickOutside = (event) => {
       if (
@@ -214,18 +225,15 @@ function Header({
       ) {
         return;
       }
-
       setCartOpen(false);
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [cartOpen]);
 
-  // ir a seccion
   const goToSection = (sectionId) => {
     setMenuOpen(false);
     setCartOpen(false);
@@ -248,9 +256,7 @@ function Header({
   };
 
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const favoritesCount = favorites.length;
 
-  // sumar total carrito
   const calculateCart = () => {
     let subtotal = 0;
     let totalDiscount = 0;
@@ -262,13 +268,9 @@ function Header({
       }
 
       const product = products.find((product) => product.id === item.id);
-      if (!product) {
-        return;
-      }
+      if (!product) return;
 
       const discount = (product.price * product.descuento) / 100;
-      const finalPrice = product.price - discount;
-
       subtotal += product.price * item.quantity;
       totalDiscount += discount * item.quantity;
     });
@@ -282,7 +284,6 @@ function Header({
 
   const cartTotals = calculateCart();
 
-  // volver al inicio
   const goHome = () => {
     setMenuOpen(false);
     setCartOpen(false);
@@ -292,36 +293,64 @@ function Header({
     });
   };
 
-  return (
+   return (
     <header className="header-glass">
+      {/* 1. LOGOTIPO */}
       <button type="button" className="logo" onClick={goHome}>
         Peri-Soft
       </button>
 
-      <button
-        type="button"
-        className="header-cart-button"
-        ref={cartButtonRef}
-        onClick={() => setCartOpen((current) => !current)}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="22"
-          height="22"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+      {/* 2. CONTENEDOR DE UTILIDADES (Agrupa los botones a la derecha) */}
+      <div className="header-utilities-group">
+        
+        {/* BOTÓN MODO CLARO / OSCURO */}
+        <button
+          type="button"
+          className="theme-toggle-btn"
+          onClick={() => setIsDarkMode((current) => !current)}
+          aria-label={isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+          title={isDarkMode ? 'Modo claro' : 'Modo oscuro'}
         >
-          <circle cx="8" cy="21" r="1" />
-          <circle cx="19" cy="21" r="1" />
-          <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
-        </svg>
-        <span>({cartCount})</span>
-      </button>
+          {isDarkMode ? (
+            <svg xmlns="http://w3.org" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+            </svg>
+          ) : (
+            <svg xmlns="http://w3.org" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          )}
+        </button>
 
+        {/* BOTÓN CARRITO */}
+        <button
+          type="button"
+          className="header-cart-button"
+          ref={cartButtonRef}
+          onClick={() => setCartOpen((current) => !current)}
+        >
+          <svg xmlns="http://w3.org" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="8" cy="21" r="1" />
+            <circle cx="19" cy="21" r="1" />
+            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+          </svg>
+          <span>({cartCount})</span>
+        </button>
+
+        {/* BOTÓN MENÚ HAMBURGUESA RESPONSIVE */}
+        <button
+          type="button"
+          className={`hamburger-button ${menuOpen ? 'is-active' : ''}`}
+          onClick={() => setMenuOpen((current) => !current)}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      {/* 3. MENÚ DESPLEGABLE DEL CARRITO */}
       {cartOpen && (
         <div className="cart-menu" ref={cartMenuRef}>
           <div className="cart-menu-header">
@@ -337,146 +366,52 @@ function Header({
 
           {cart.length === 0 ? (
             <div className="cart-empty">
-              <h3>Tu carrito esta vacio</h3>
-              <p>Agrega productos desde el catalogo.</p>
+              <h3>Tu carrito está vacío</h3>
+              <p>Agrega productos desde el catálogo.</p>
             </div>
           ) : (
             <>
               <div className="cart-menu-items">
-                {cart.map((item) => {
-                  if (item.isCustom) {
-                    const itemTotal = item.price * item.quantity;
-
-                    return (
-                      <div className="cart-menu-item" key={item.id}>
-                        <img
-                          src={item.image}
-                          alt={item.title}
-                          className="cart-menu-item-image"
-                        />
-
-                        <div className="cart-menu-item-info">
-                          <h3>{item.title}</h3>
-                          <p className="cart-item-color">{item.parts}</p>
-
-                          <div className="cart-prices">
-                            <span className="cart-final-price">
-                              ${item.price.toFixed(2)}
-                            </span>
-                          </div>
-
-                          <div className="cart-item-controls">
-                            <button
-                              type="button"
-                              onClick={() =>
-                                updateCartQuantity(item.id, item.quantity - 1)
-                              }
-                            >
-                              -
-                            </button>
-                            <span>{item.quantity}</span>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                updateCartQuantity(item.id, item.quantity + 1)
-                              }
-                            >
-                              +
-                            </button>
-                          </div>
-
-                          <p className="cart-item-total">
-                            Total: ${itemTotal.toFixed(2)}
-                          </p>
-                        </div>
-
+                {cart.map((item) => (
+                  <div className="cart-menu-item" key={item.id}>
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="cart-menu-item-image"
+                    />
+                    <div className="cart-menu-item-info">
+                      <h3>{item.title}</h3>
+                      <p className="cart-item-color">{item.parts || item.color}</p>
+                      <div className="cart-prices">
+                        <span className="cart-final-price">
+                          ${item.price.toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="cart-item-controls">
                         <button
                           type="button"
-                          className="cart-remove"
-                          onClick={() => removeFromCart(item.id)}
+                          onClick={() => updateCartQuantity(item.id, item.quantity - 1)}
                         >
-                          X
+                          -
+                        </button>
+                        <span>{item.quantity}</span>
+                        <button
+                          type="button"
+                          onClick={() => updateCartQuantity(item.id, item.quantity + 1)}
+                        >
+                          +
                         </button>
                       </div>
-                    );
-                  }
-
-                  const product = products.find(
-                    (product) => product.id === item.id
-                  );
-
-                  if (!product) {
-                    return null;
-                  }
-
-                  const discount = (product.price * product.descuento) / 100;
-                  const finalPrice = product.price - discount;
-                  const itemTotal = finalPrice * item.quantity;
-
-                  return (
-                    <div className="cart-menu-item" key={item.id}>
-                      <img
-                        src={product.image}
-                        alt={product.title}
-                        className="cart-menu-item-image"
-                      />
-
-                      <div className="cart-menu-item-info">
-                        <h3>{product.title}</h3>
-                        <p className="cart-item-color">{product.color}</p>
-
-                        {product.descuento > 0 && (
-                          <span className="cart-discount">
-                            -{product.descuento}%
-                          </span>
-                        )}
-
-                        <div className="cart-prices">
-                          {product.descuento > 0 && (
-                            <span className="cart-original-price">
-                              ${product.price.toFixed(2)}
-                            </span>
-                          )}
-                          <span className="cart-final-price">
-                            ${finalPrice.toFixed(2)}
-                          </span>
-                        </div>
-
-                        <div className="cart-item-controls">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              updateCartQuantity(item.id, item.quantity - 1)
-                            }
-                          >
-                            -
-                          </button>
-                          <span>{item.quantity}</span>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              updateCartQuantity(item.id, item.quantity + 1)
-                            }
-                          >
-                            +
-                          </button>
-                        </div>
-
-                        <p className="cart-item-total">
-                          Total: ${itemTotal.toFixed(2)}
-                        </p>
-                      </div>
-
-                      <button
-                        type="button"
-                        className="cart-remove"
-                        onClick={() => removeFromCart(item.id)}
-                      >
-                        X
-                      </button>
                     </div>
-                  );
-                })}
+                    <button
+                      type="button"
+                      className="cart-menu-remove"
+                      onClick={() => removeFromCart(item.id)}
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
               </div>
 
               <div className="cart-summary">
@@ -484,17 +419,16 @@ function Header({
                   <span>Subtotal:</span>
                   <span>${cartTotals.subtotal.toFixed(2)}</span>
                 </div>
-
-                <div className="cart-summary-row cart-discount-row">
-                  <span>Descuento:</span>
-                  <span>-${cartTotals.totalDiscount.toFixed(2)}</span>
-                </div>
-
+                {cartTotals.totalDiscount > 0 && (
+                  <div className="cart-summary-row cart-discount-row">
+                    <span>Descuento:</span>
+                    <span>-${cartTotals.totalDiscount.toFixed(2)}</span>
+                  </div>
+                )}
                 <div className="cart-summary-total">
                   <strong>Total a pagar:</strong>
                   <strong>${cartTotals.total.toFixed(2)}</strong>
                 </div>
-
                 <button type="button" className="checkout-btn">
                   Ir al Pago
                 </button>
@@ -504,19 +438,10 @@ function Header({
         </div>
       )}
 
-      <button
-        type="button"
-        className={`hamburger-button ${menuOpen ? 'is-active' : ''}`}
-        onClick={() => setMenuOpen((current) => !current)}
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-
+      {/* 4. MENÚ NAVEGACIÓN LATERAL (SIDE-MENU) */}
       <nav className={`side-menu ${menuOpen ? 'menu-open' : ''}`}>
         <div className="menu-header">
-          <h2>Menu</h2>
+          <h2>Menú</h2>
         </div>
 
         <ul className="menu-links">
@@ -535,7 +460,7 @@ function Header({
               className="menu-link"
               onClick={() => goToSection('catalogo')}
             >
-              Catalogo
+              Catálogo
             </button>
           </li>
           <li>
@@ -596,6 +521,7 @@ function Header({
     </header>
   );
 }
+
 
 // pagina catalogo
 function Catalog() {
@@ -958,8 +884,11 @@ function Catalog() {
                 </svg>
               </button>
             </div>
-          </article>
+          </article>////
         ))}
+
+
+
 
         {filteredProducts.length === 0 && (
           <p className="empty-results">
@@ -1268,7 +1197,10 @@ function ProductPage() {
   // guardado carrito
   const [cart, setCart] = useState([]);
   // guardado favoritos
-  const [favorites, setFavorites] = useState([]);
+const [favorites] = useState([]); // O como tengas tu declaración original en esa línea
+
+  
+// eslint-disable-next-line no-unused-vars
 
   const product = products.find((item) => item.id === Number(productId));
 
@@ -1347,3 +1279,4 @@ export default function App() {
     </Routes>
   );
 }
+
