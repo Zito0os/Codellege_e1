@@ -89,6 +89,9 @@ app.post('/api/login', async (req, res) => {
 app.get('/api/productos', async (req, res) => {
   try {
     const productos = await prisma.producto.findMany({
+      where: {
+        esCustom: false, // excluye los generados por pedidos personalizados
+      },
       orderBy: {
         id: 'asc',
       },
