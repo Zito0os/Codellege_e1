@@ -66,6 +66,8 @@ const hasActiveSession = () => {
   }
 };
 
+const CART_STORAGE_KEY = 'peri-soft-cart';
+
 const productImages = {
   'REDDRAGON.PNG': REDRAGON,
   'cor.jpg': cor,
@@ -160,6 +162,15 @@ function Header({
   const [cartOpen, setCartOpen] = useState(false);
   const cartMenuRef = useRef(null);
   const cartButtonRef = useRef(null);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('peri-soft-theme');
+    return savedTheme !== 'light';
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('light-mode', !isDarkMode);
+    localStorage.setItem('peri-soft-theme', isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
 
   // cerrar carrito al click afuera
   useEffect(() => {
@@ -259,43 +270,85 @@ function Header({
         Peri-Soft
       </button>
 
-      <button
-        type="button"
-        className="header-cart-button"
-        ref={cartButtonRef}
-        onClick={() => setCartOpen((current) => !current)}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="22"
-          height="22"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+      <div className="header-utilities-group">
+        <button
+          type="button"
+          className="theme-toggle-btn"
+          onClick={() => setIsDarkMode((current) => !current)}
+          aria-label={isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+          title={isDarkMode ? 'Modo claro' : 'Modo oscuro'}
         >
-          <circle cx="8" cy="21" r="1" />
-          <circle cx="19" cy="21" r="1" />
-          <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
-        </svg>
-        <span>({cartCount})</span>
-      </button>
+          {isDarkMode ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l-1.41 1.41M17.66 6.34l1.41-1.41" />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          )}
+        </button>
 
-      <button
-        type="button"
-        className="header-profile-button"
-        onClick={() => {
-          setCartOpen(false);
-          goToAccount(navigate);
-        }}
-        title="Perfil"
-      >
-        <img src={perfil} alt="Perfil" />
-      </button>
+        <button
+          type="button"
+          className="header-cart-button"
+          ref={cartButtonRef}
+          onClick={() => setCartOpen((current) => !current)}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="8" cy="21" r="1" />
+            <circle cx="19" cy="21" r="1" />
+            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+          </svg>
+          <span>({cartCount})</span>
+        </button>
 
-      {cartOpen && (
+        <button
+          type="button"
+          className="header-profile-button"
+          onClick={() => {
+            setCartOpen(false);
+            goToAccount(navigate);
+          }}
+          title="Perfil"
+        >
+          <img src={perfil} alt="Perfil" />
+        </button>
+
+        {cartOpen && (
         <div className="cart-menu" ref={cartMenuRef}>
           <div className="cart-menu-header">
             <h2>Mi Carrito</h2>
@@ -483,17 +536,18 @@ function Header({
             </>
           )}
         </div>
-      )}
+        )}
 
-      <button
-        type="button"
-        className={`hamburger-button ${menuOpen ? 'is-active' : ''}`}
-        onClick={() => setMenuOpen((current) => !current)}
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+        <button
+          type="button"
+          className={`hamburger-button ${menuOpen ? 'is-active' : ''}`}
+          onClick={() => setMenuOpen((current) => !current)}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
 
       <nav className={`side-menu ${menuOpen ? 'menu-open' : ''}`}>
         <div className="menu-header">
@@ -587,7 +641,14 @@ function Catalog({ products }) {
   const [offersOnly, setOffersOnly] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   // guardado carrito
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(() => {
+    try {
+      const savedCart = JSON.parse(localStorage.getItem(CART_STORAGE_KEY));
+      return Array.isArray(savedCart) ? savedCart : [];
+    } catch {
+      return [];
+    }
+  });
   // guardado favoritos
   const [favorites, setFavorites] = useState([]);
   // personalizar teclado
@@ -598,6 +659,10 @@ function Catalog({ products }) {
   const [selectedKeycaps, setSelectedKeycaps] = useState(null);
   const [selectedKeycapColor, setSelectedKeycapColor] = useState(null);
   const [customOpen, setCustomOpen] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+  }, [cart]);
 
   // mover carrusel
   useEffect(() => {

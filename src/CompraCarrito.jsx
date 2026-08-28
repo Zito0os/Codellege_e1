@@ -69,6 +69,7 @@ export default function CompraCarrito() {
 
         const savedOrder = { ...data, image: cart[0].image || null };
         localStorage.setItem(purchaseStorageKey, JSON.stringify(savedOrder));
+        localStorage.removeItem('peri-soft-cart');
         setOrder(savedOrder);
       } catch (requestError) {
         setError(requestError.message);
@@ -101,15 +102,7 @@ export default function CompraCarrito() {
           Volver al inicio
         </button>
 
-        <section className="result-layout">
-          <div className="result-visual">
-            <div className="image-frame">
-              {order.image && (
-                <img src={order.image} alt="Productos comprados" className="result-image" />
-              )}
-            </div>
-          </div>
-
+        <section className="result-layout result-layout-centered">
           <div className="result-details">
             <h1>Tu compra ha sido realizada</h1>
             <p className="result-description">

@@ -114,6 +114,7 @@ h4 {
   top: 10vh;
   right: 20px;
   width: 390px;
+  height: min(calc(100vh - 12vh), 760px);
   max-height: calc(100vh - 12vh);
   background: linear-gradient(180deg, #151e30 0%, #101826 100%);
   border: 1px solid rgba(130, 155, 190, 0.18);
@@ -121,6 +122,8 @@ h4 {
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
   z-index: 2000;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
   animation: cartAppear 0.25s ease;
 }
 
@@ -244,8 +247,9 @@ h4 {
 }
 
 .cart-menu-items {
+  flex: 1 1 auto;
+  min-height: 0;
   padding: 16px;
-  max-height: calc(100vh - 320px);
   overflow-y: auto;
 }
 
@@ -303,6 +307,7 @@ h4 {
 }
 
 .cart-summary {
+  flex: 0 0 auto;
   padding: 18px 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   background-color: #182338;
@@ -1210,6 +1215,29 @@ hr {
   padding: calc(10vh + 24px) 0 40px;
 }
 
+.auth-shell .back-button {
+  margin-bottom: 14px;
+  background: #334155;
+  border-color: #64748b;
+  color: #f8fafc;
+}
+
+.auth-shell .back-button:hover {
+  background: #475569;
+  border-color: #94a3b8;
+}
+
+.result-details .secondary-action {
+  background: #334155;
+  border-color: #64748b;
+  color: #f8fafc;
+}
+
+.result-details .secondary-action:hover {
+  background: #475569;
+  border-color: #94a3b8;
+}
+
 .auth-card {
   padding: 28px 24px;
   border-radius: 12px;
@@ -1294,4 +1322,581 @@ hr {
   font: inherit;
   font-weight: 700;
   cursor: pointer;
+}
+
+/* =========================================================
+   MODO OSCURO / MODO CLARO
+   Capa visual: no modifica la estructura ni la logica React.
+   ========================================================= */
+:root {
+  --theme-bg: #070b14;
+  --theme-surface: #111827;
+  --theme-surface-2: #151e30;
+  --theme-text: #e8eef7;
+  --theme-text-muted: #aeb9c9;
+  --theme-border: rgba(130, 155, 190, 0.18);
+  --theme-accent: #4f7ec8;
+  --theme-accent-hover: #5a8ad4;
+  --theme-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+  --theme-input: #101826;
+}
+
+html.light-mode {
+  --theme-bg: #f4f7fb;
+  --theme-surface: #ffffff;
+  --theme-surface-2: #eef3f8;
+  --theme-text: #17202a;
+  --theme-text-muted: #5f6b78;
+  --theme-border: rgba(23, 32, 42, 0.12);
+  --theme-accent: #2563eb;
+  --theme-accent-hover: #1d4ed8;
+  --theme-shadow: 0 16px 40px rgba(23, 32, 42, 0.10);
+  --theme-input: #ffffff;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+html,
+body {
+  background: var(--theme-bg);
+  color: var(--theme-text);
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+body,
+.header-glass,
+.cart-menu,
+.cart-menu-header,
+.cart-menu-item,
+.cart-summary,
+.side-menu,
+.product-card,
+.filter-bar,
+.custom-option-card,
+.custom-summary,
+.custom-part-item,
+.favorite-item,
+.footer,
+input,
+select,
+textarea,
+button {
+  transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+/* Boton situado inmediatamente al lado del carrito */
+.theme-toggle-btn {
+  width: 42px;
+  height: 42px;
+  margin-right: 10px;
+  padding: 0;
+  flex: 0 0 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--theme-border);
+  border-radius: 10px;
+  background: var(--theme-surface-2);
+  color: var(--theme-text);
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s ease, background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+  transform: translateY(-2px);
+  background: var(--theme-accent);
+  color: #ffffff;
+  border-color: var(--theme-accent);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22);
+}
+
+.theme-toggle-btn:active {
+  transform: scale(0.94);
+}
+
+.theme-toggle-btn:focus-visible {
+  outline: 2px solid var(--theme-accent);
+  outline-offset: 3px;
+}
+
+.theme-toggle-btn svg {
+  display: block;
+}
+
+/* Superficies principales */
+.catalog-page,
+main {
+  color: var(--theme-text);
+}
+
+.header-glass {
+  background: color-mix(in srgb, var(--theme-surface) 92%, transparent);
+  border-bottom-color: var(--theme-border);
+}
+
+.logo {
+  color: var(--theme-text);
+}
+
+.header-cart-button {
+  background: var(--theme-surface-2);
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+}
+
+.header-cart-button:hover {
+  background: var(--theme-accent);
+  color: #ffffff;
+  border-color: var(--theme-accent);
+}
+
+.auth-page {
+  background: var(--theme-bg);
+  color: var(--theme-text);
+}
+
+.auth-card {
+  background: var(--theme-surface);
+  border-color: var(--theme-border);
+  box-shadow: var(--theme-shadow);
+  color: var(--theme-text);
+}
+
+.auth-field label,
+.auth-toggle-text {
+  color: var(--theme-text-muted);
+}
+
+.auth-field input {
+  background: var(--theme-input);
+  border-color: var(--theme-border);
+  color: var(--theme-text);
+}
+
+.auth-field input::placeholder {
+  color: var(--theme-text-muted);
+}
+
+.auth-submit-btn {
+  background: linear-gradient(135deg, var(--theme-accent) 0%, var(--theme-accent-hover) 100%);
+}
+
+.auth-toggle-btn {
+  color: var(--theme-accent);
+}
+
+.auth-shell .back-button {
+  background: var(--theme-surface-2);
+  border-color: var(--theme-border);
+  color: var(--theme-text);
+}
+
+.auth-shell .back-button:hover {
+  background: var(--theme-accent);
+  border-color: var(--theme-accent);
+  color: #ffffff;
+}
+
+.result-details .secondary-action {
+  background: var(--theme-surface-2);
+  border-color: var(--theme-border);
+  color: var(--theme-text);
+}
+
+.result-details .secondary-action:hover {
+  background: var(--theme-accent);
+  border-color: var(--theme-accent);
+  color: #ffffff;
+}
+
+.cart-menu {
+  background: var(--theme-surface);
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+  box-shadow: var(--theme-shadow);
+}
+
+.cart-menu-header,
+.cart-summary {
+  background: var(--theme-surface-2);
+  border-color: var(--theme-border);
+}
+
+.cart-menu-header h2,
+.cart-menu-item-info h3,
+.cart-menu-item-info h4,
+.cart-summary-total {
+  color: var(--theme-text);
+}
+
+.cart-menu-item {
+  background: var(--theme-surface-2);
+  border-color: var(--theme-border);
+}
+
+.cart-menu-item-info p,
+.cart-empty,
+.cart-summary-row,
+.cart-item-total {
+  color: var(--theme-text-muted);
+}
+
+.cart-final-price {
+  color: var(--theme-text);
+}
+
+.cart-item-controls button {
+  background: var(--theme-input);
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+}
+
+.side-menu {
+  background: var(--theme-surface);
+  color: var(--theme-text);
+  box-shadow: -5px 0 25px rgba(0, 0, 0, 0.18);
+}
+
+.menu-header {
+  border-bottom-color: var(--theme-border);
+}
+
+.menu-header h2,
+.menu-link {
+  color: var(--theme-text) !important;
+}
+
+.menu-link:hover {
+  color: var(--theme-accent) !important;
+}
+
+.menu-divider {
+  background-color: var(--theme-border);
+}
+
+/* Tarjetas y secciones */
+.product-card,
+.filter-bar,
+.custom-panel,
+.custom-option-card,
+.custom-summary,
+.favorite-item,
+.result-shell,
+.image-frame {
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+}
+
+.product-card {
+  background: var(--theme-surface);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.product-card:hover,
+.favorite-item:hover,
+.custom-option-card:hover {
+  box-shadow: var(--theme-shadow);
+}
+
+.filter-bar,
+.custom-panel,
+.custom-summary {
+  background: var(--theme-surface);
+}
+
+.result-shell {
+  background: var(--theme-surface);
+  box-shadow: var(--theme-shadow);
+}
+
+.image-frame {
+  background: var(--theme-surface-2);
+}
+
+.custom-option-card,
+.favorite-item,
+.custom-part-item {
+  background: var(--theme-surface-2);
+}
+
+.custom-option-card.is-selected {
+  border-color: var(--theme-accent);
+  background: color-mix(in srgb, var(--theme-accent) 12%, var(--theme-surface));
+}
+
+.custom-part-item {
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+}
+
+.custom-toggle-arrow {
+  border-color: var(--theme-text);
+}
+
+.result-details h1,
+.result-details .product-label,
+.result-details .meta-pill,
+.result-details .result-description,
+.result-details .feature-list li {
+  color: var(--theme-text);
+}
+
+.result-details .product-label,
+.result-details .result-description,
+.result-details .meta-pill {
+  color: var(--theme-text-muted);
+}
+
+.result-details .meta-pill,
+.result-details .image-frame,
+.result-details .result-shell {
+  border-color: var(--theme-border);
+}
+
+.item-price,
+.product-info h2,
+.favorite-item-info h4 {
+  color: var(--theme-text);
+}
+
+.product-tag,
+.favorite-item-info p,
+.empty-message {
+  color: var(--theme-text-muted);
+}
+
+/* Inputs */
+select,
+input,
+textarea {
+  background: var(--theme-input);
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+}
+
+select option {
+  background: var(--theme-surface);
+  color: var(--theme-text);
+}
+
+/* Botones de producto */
+.product-button-secondary {
+  background: var(--theme-surface-2) !important;
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+}
+
+.product-button-secondary:hover {
+  background: var(--theme-accent) !important;
+  color: #ffffff !important;
+  border-color: var(--theme-accent) !important;
+}
+
+.checkout-btn {
+  background: linear-gradient(135deg, var(--theme-accent) 0%, var(--theme-accent-hover) 100%);
+}
+
+/* Corazón: conserva visibilidad sobre cualquier tema */
+.favorite-heart {
+  background: var(--theme-surface) !important;
+  color: var(--theme-text) !important;
+  border: 1px solid var(--theme-border);
+}
+
+.favorite-heart:hover,
+.favorite-heart.active {
+  background: var(--theme-surface) !important;
+}
+
+.favorite-heart.active {
+  color: #ef4444 !important;
+}
+
+/* Footer */
+.footer {
+  background: var(--theme-surface-2);
+  border-top-color: var(--theme-border);
+}
+
+.footer-column h4 {
+  color: var(--theme-text);
+}
+
+.footer-nav-list a {
+  color: var(--theme-text-muted);
+}
+
+.footer-nav-list a:hover {
+  color: var(--theme-text);
+}
+
+hr {
+  border-top-color: var(--theme-border);
+}
+
+/* Accesibilidad / movimiento */
+@media (prefers-reduced-motion: reduce) {
+  html,
+  body,
+  button,
+  input,
+  select,
+  textarea,
+  .product-card,
+  .cart-menu,
+  .side-menu {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .theme-toggle-btn {
+    width: 38px;
+    height: 38px;
+    flex-basis: 38px;
+    margin-right: 7px;
+    border-radius: 9px;
+  }
+
+  .theme-toggle-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+
+/* Este contenedor evita que los elementos colapsen verticalmente */
+.header-utilities-group {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 14px; /* Espaciado uniforme de UI */
+}
+
+/* Forzar que el botón de carrito NO empuje hacia la izquierda de nuevo */
+.header-cart-button {
+  margin: 0 !important; /* Elimina cualquier margin-left viejo que rompa el layout */
+}
+
+
+/* Corrección para los textos y fondos de los filtros en Modo Claro */
+.light-mode .filters-container button, 
+.light-mode .filter-btn { /* Ajusta al nombre exacto de tu clase de botón */
+  background-color: #E4EAE6 !important; /* Gris-menta muy suave para dar volumen */
+  color: #1A202C !important;            /* Negro mate/carbón para máxima legibilidad */
+  border: 1px solid rgba(0, 163, 137, 0.15);
+}
+
+/* Corrección para las líneas del sándwich (Hamburguesa) */
+.light-mode .hamburger-button span {
+  background-color: #1A202C !important; /* Forzamos que las 3 líneas pasen a negro mate */
+}
+
+
+
+/* ==========================================================================
+   CORRECCIÓN DE CONTRASTE PARA FILTROS EN MODO CLARO
+ 
+/* 1. Texto de la etiqueta "Tipo de switch" y el título h2 */
+.light-mode .filter-bar h2,
+.light-mode .filter-select-label {
+  color: #1e293b !important; /* Gris oscuro industrial nítido */
+  font-weight: 700;
+}
+
+/* 2. El cuadro desplegable (Select) de los switches */
+.light-mode .filter-bar select {
+  background-color: #f1f5f9 !important; /* Fondo gris claro amigable */
+  color: #0f172a !important;            /* Letras internas oscuras legibles */
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  border-radius: 8px;
+  padding: 6px 12px;
+  outline: none;
+}
+
+/* 3. Las opciones internas del desplegable */
+.light-mode .filter-bar select option {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* 4. Los botones de acción ("Precio ↓" y "Ofertas") */
+.light-mode .filter-button {
+  background-color: #f1f5f9 !important; /* Fondo gris suave uniforme */
+  color: #0f172a !important;            /* Texto e iconos oscuros visibles */
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+}
+
+/* 5. Estado cuando un filtro está activado (is-active) */
+.light-mode .filter-button.is-active {
+  background: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%) !important; /* Toque verde menta */
+  color: #007d6c !important; /* Texto verde oscuro de alto contraste */
+  border: 1px solid rgba(0, 163, 137, 0.3) !important;
+}
+
+/* 6. Efecto Hover de los botones para dar feedback de clicks */
+.light-mode .filter-button:hover,
+.light-mode .filter-bar select:hover {
+  background-color: #e2e8f0 !important;
+  transform: translateY(-1px);
+}
+
+
+/* ==========================================================================
+   PALETA MODO CLARO 
+   ========================================================================== */
+.light-mode {
+  /* 1. FONDOS: Cambiamos el gris genérico por un "Gris Cemento/Aluminio" muy claro */
+  /* Reduce la fatiga visual un 40% y hace que los renders de teclados resalten en 3D */
+  --bg-body: linear-gradient(165deg, #F8FAFC 0%, #F1F5F9 42%, #E2E8F0 100%);
+  
+  /* El Header flota como una tecla blanca nueva e impecable */
+  --bg-header: rgba(255, 255, 255, 0.94);
+
+  /* 2. TIPOGRAFÍA: Eliminamos el negro puro (que se ve tosco y barato) */
+  --text-titles: #0F172A;     /* Negro tinta profundo: para tu logo, filtros y nombres de teclados */
+  --text-main: #334155;       /* Gris pizarra premium: para las especificaciones y descripciones */
+  --text-muted: #64748B;      /* Gris acero: para precios tachados o datos secundarios */
+
+  /* 3. COLORES DE ACENTO (El alma del diseño no aburrido) */
+  /* Usamos un esquema "Keyboard Custom-Mint" que inyecta frescura tecnológica */
+  --accent-color: #059669;         /* Verde esmeralda para precios finales y etiquetas de oferta */
+  --accent-soft: #E6FFFA;          /* Fondo menta pastel para estados seleccionados (como filtros activos) */
+  --accent-border: rgba(5, 150, 105, 0.2);
+}
+
+/* ==========================================================================
+   APLICACIÓN DE LOS TOKENS EN LA UI REAL
+   ========================================================================== */
+
+/* Las tarjetas de productos deben lucir limpias y con relieve real */
+.light-mode .product-card {
+  background-color: #FFFFFF !important;
+  border: 1px solid rgba(148, 163, 184, 0.12) !important;
+  /* Sombra difusa de oclusión ambiental: simula que el teclado está apoyado en tu escritorio */
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.04), 
+              0 8px 10px -6px rgba(15, 23, 42, 0.04) !important;
+}
+
+/* El texto "Filtros" y "Tipo de switch" se adaptan a la nueva jerarquía */
+.light-mode .filter-bar h2 {
+  color: var(--text-titles) !important;
+}
+.light-mode .filter-select-label {
+  color: var(--text-main) !important;
+}
+
+/* Tus insignias de descuento se vuelven más elegantes y profesionales */
+.light-mode .discount-badge {
+  background-color: #FEE2E2 !important; /* Rosa pastel suave */
+  color: #EF4444 !important;            /* Texto rojo vibrante */
+  font-weight: 800;
 }

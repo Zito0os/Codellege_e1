@@ -440,6 +440,31 @@ button {
   align-items: start;
 }
 
+.result-layout-centered {
+  display: block;
+  min-height: 0;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
+}
+
+.result-layout-centered .result-details {
+  text-align: center;
+}
+
+.result-layout-centered .purchase-info {
+  margin-top: 24px;
+}
+
+.result-layout-centered .purchase-info p {
+  margin: 8px 0;
+}
+
+.result-layout-centered .action-row {
+  justify-content: center;
+}
+
 .result-visual {
   display: flex;
 }
